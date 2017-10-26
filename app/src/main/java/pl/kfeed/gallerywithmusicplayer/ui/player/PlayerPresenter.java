@@ -4,8 +4,6 @@ import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
-import pl.kfeed.gallerywithmusicplayer.dagger.ActivityScoped;
-
 /**
  * Created by Kfeed on 19.10.2017.
  */
@@ -19,12 +17,12 @@ public final class PlayerPresenter implements PlayerContract.Presenter {
     PlayerPresenter(){}
 
     @Override
-    public void takeView(PlayerContract.View view) {
+    public void attachView(PlayerContract.View view) {
 
     }
 
     @Override
-    public void dropView() {
+    public void detachView() {
 
     }
 }

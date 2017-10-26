@@ -1,10 +1,6 @@
 package pl.kfeed.gallerywithmusicplayer.ui.gallery.popup;
 
 import android.content.Context;
-import android.graphics.Rect;
-import android.support.design.widget.FloatingActionButton;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -13,16 +9,15 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.kfeed.gallerywithmusicplayer.R;
 
-/**
- * Created by Kfeed on 26.10.2017.
- */
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
 
 public class PhotoPopup extends PopupWindow {
 
@@ -35,18 +30,17 @@ public class PhotoPopup extends PopupWindow {
 
     private Context mContext;
 
-
-    public PhotoPopup(View contentView, int width, int height, boolean focusable, Context mContext, String imgPath, String date) {
+    public PhotoPopup(View contentView, int width, int height, boolean focusable, Context mContext, String imgPath, Calendar date) {
         super(contentView, width, height, focusable);
         this.mContext = mContext;
         ButterKnife.bind(this, contentView);
         createView(imgPath, date);
     }
 
-    private void createView(String photoPath, String date) {
+    private void createView(String photoPath, Calendar date) {
 
-        mDate.setText(date);
-        mTime.setText(date);
+        mDate.setText(date.get(Calendar.DAY_OF_MONTH) + " " + date.get(MONTH) + ", " + date.get(YEAR));
+        mTime.setText(date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE));
 
         //Setting image with picasso
         Picasso.with(mContext).load("file://" + photoPath)
@@ -57,12 +51,12 @@ public class PhotoPopup extends PopupWindow {
     }
 
     @OnClick(R.id.popup_fab)
-    void onClick(View view){
+    void onClick(View view) {
         Toast.makeText(mContext, "Photo edition activity should be started, but its not :(", Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.popup_back_btn)
-    void onBackButtonClick(View view){
+    void onBackButtonClick(View view) {
         dismiss();
     }
 }

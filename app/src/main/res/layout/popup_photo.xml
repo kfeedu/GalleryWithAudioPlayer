@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@color/transparent_grey_background">
+    android:background="@color/third_text">
 
 
 
@@ -16,6 +16,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:background="@color/third_text"
+        android:elevation="5dp"
         >
 
         <ImageButton
@@ -33,24 +34,26 @@
         <TextView
             android:id="@+id/popup_date"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:textSize="16sp"
             android:textColor="@color/primary_text"
             android:text="17 Października, 2017"
             android:paddingStart="72dp"
+            android:fontFamily="sans-serif"
             android:paddingTop="12dp"
-            android:fontFamily="sans-serif"/>
+            />
 
         <TextView
             android:id="@+id/popup_time"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:textColor="@color/secondary_text"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:text="17:05"
             android:paddingStart="72dp"
-            android:layout_below="@id/popup_date"
-            android:fontFamily="sans-serif-light"/>
+
+            android:fontFamily="sans-serif-light"
+            android:paddingTop="30dp"/>
     </RelativeLayout>
     <ImageView
         android:id="@+id/popup_image"
@@ -68,7 +71,8 @@
         android:src="@android:drawable/ic_menu_edit"
         app:layout_anchor="@id/popup_image"
         app:layout_anchorGravity="bottom|right|end"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp"
+        android:elevation="5dp"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

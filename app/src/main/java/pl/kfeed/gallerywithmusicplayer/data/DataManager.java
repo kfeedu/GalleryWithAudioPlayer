@@ -10,10 +10,6 @@ import javax.inject.Singleton;
 
 import pl.kfeed.gallerywithmusicplayer.data.local.StorageHelper;
 
-/**
- * Created by Kfeed on 19.10.2017.
- */
-
 @Singleton
 public class DataManager {
 
@@ -33,8 +29,6 @@ public class DataManager {
     }
 
     public Cursor getPhotoAndThumbCursor(){
-//        mStorageHelper.getImagePaths();
-//        mStorageHelper.getThumbPaths();
         return mStorageHelper.getCursorToImagesAndThumbnails();
     }
 

@@ -25,10 +25,6 @@ import javax.inject.Singleton;
 
 import pl.kfeed.gallerywithmusicplayer.R;
 
-/**
- * Created by Kfeed on 22.10.2017.
- */
-
 @Singleton
 public class StorageHelper {
 
@@ -39,7 +35,7 @@ public class StorageHelper {
     private static final Uri THUMB_INTERNAL_STORAGE_URI = MediaStore.Images.Thumbnails.INTERNAL_CONTENT_URI;
     private static final Uri THUMB_EXTERNAL_STORAGE_URI = MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI;
 
-    Context mContext;
+    private Context mContext;
 
     @Inject
     public StorageHelper(Context context) {
@@ -91,7 +87,6 @@ public class StorageHelper {
         return bitmap;
     }
 
-
     public String[] fetchImagePathsFromExternalStorage() {
         return fetchImagesPathFromStorage(IMAGE_EXTERNAL_STORAGE_URI);
     }
@@ -105,10 +100,7 @@ public class StorageHelper {
         final String orderBy = MediaStore.Images.Media._ID;
         //Stores all the images from the gallery in Cursor
         Cursor cursor = MediaStore.Images.Media.query(mContext.getContentResolver(), storageType, columns, null, orderBy);
-//                mContext.getContentResolver().query(
-//                storageType, columns, null,
-//                null, orderBy);
-        //Total number of images
+
         int count = cursor.getCount();
 
         //Create an array to store path to all the images
@@ -148,7 +140,7 @@ public class StorageHelper {
     public Cursor joinImageAndThumbCursors(Cursor imageCursor, Cursor thumbCursor) {
         // join these and return
         // the join is on images._ID = thumbnails.IMAGE_ID
-        for(int i = 0; i< thumbCursor.getColumnCount(); i++){
+        for (int i = 0; i < thumbCursor.getColumnCount(); i++) {
             Log.d(TAG, "Id=" + i + " ColumnName=" + thumbCursor.getColumnName(i));
         }
 
@@ -158,20 +150,16 @@ public class StorageHelper {
         );
 
         String[] projection = {"thumb_path", "ID", "title", "desc", "datetaken", "filename", "image_path"};
-
         MatrixCursor retCursor = new MatrixCursor(projection);
 
         try {
             for (CursorJoiner.Result joinerResult : joiner) {
-
                 switch (joinerResult) {
                     case LEFT:
                         // handle case where a row in cursorA is unique
                         // images is unique (missing thumbnail)
-
                         // we want to show ALL images, even (new) ones without thumbnail!
                         // data = null will cause a temporary thumbnail to be generated in PhotoAdapter.bindView()
-
                         retCursor.addRow(new Object[]{
                                 null, // data
                                 imageCursor.getLong(0), // image id
@@ -190,14 +178,12 @@ public class StorageHelper {
                     case RIGHT:
                         // handle case where a row in cursorB is unique
                         // thumbs is unique (missing image)
-
                         // compensate for CursorJoiner expecting cursors ordered ascending...
                         thumbCursor.moveToNext();
                         imageCursor.moveToPrevious();
                         break;
 
                     case BOTH:
-
                         // handle case where a row with the same key is in both cursors
                         retCursor.addRow(new Object[]{
                                 thumbCursor.getString(1), // data
@@ -208,51 +194,29 @@ public class StorageHelper {
                                 imageCursor.getString(3),  // filename
                                 imageCursor.getString(1)  //image path
                         });
-
                         break;
                 }
             }
         } catch (Exception e) {
             Log.e(TAG, "JOIN FAILED: " + e);
         }
-
-        for(int i = 0; i <retCursor.getCount(); i++){
+        for (int i = 0; i < retCursor.getCount(); i++) {
             retCursor.moveToPosition(i);
             Log.d(TAG, "ThumbPath=" + retCursor.getString(0) + " imageId=" + retCursor.getLong(1) + " imgPath=" + retCursor.getString(6));
-
         }
-
         thumbCursor.close();
         imageCursor.close();
-
         return retCursor;
     }
-
-//    public void generateThumbnails() {
-//        Intent mediaScan = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//        mediaScan.setData(IMAGE_EXTERNAL_STORAGE_URI);
-//        mContext.sendBroadcast(mediaScan);
-//    }
 
     public String[] getThumbPaths() {
         String[] projection = {MediaStore.Images.Thumbnails._ID, MediaStore.Images.Thumbnails.DATA, MediaStore.Images.Thumbnails.IMAGE_ID};
         String orderBy = MediaStore.Images.Thumbnails._ID;
         Cursor cursor = mContext.getContentResolver().query(THUMB_EXTERNAL_STORAGE_URI, projection, null, null, orderBy);
         String[] paths = new String[cursor.getCount()];
-        Log.d(TAG,"" + cursor.getColumnCount());
-        Log.d(TAG,"" + cursor.getCount());
-
-        int columnDataIndex = cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
-        int columnIdIndex = cursor.getColumnIndex(MediaStore.Images.Thumbnails._ID);
-        int columnImageId = cursor.getColumnIndex(MediaStore.Images.Thumbnails.IMAGE_ID);
-
-//        for (int i = 0; i < cursor.getCount(); i++) {
-//            cursor.moveToPosition(i);
-//            Log.d(TAG, "ThumbPath: id=" + cursor.getLong(columnIdIndex) + " imageId=" + cursor.getLong(columnImageId) + " path=" + cursor.getString(columnDataIndex));
-//            paths[i] = cursor.getString(columnDataIndex);
-//        }
+        Log.d(TAG, "" + cursor.getColumnCount());
+        Log.d(TAG, "" + cursor.getCount());
         cursor.close();
-
         return paths;
     }
 
@@ -261,20 +225,9 @@ public class StorageHelper {
         String orderBy = MediaStore.Images.Media._ID;
         Cursor cursor = mContext.getContentResolver().query(IMAGE_EXTERNAL_STORAGE_URI, projection, null, null, orderBy);
         String[] paths = new String[cursor.getCount()];
-        Log.d(TAG,"" + cursor.getColumnCount());
-        Log.d(TAG,"" + cursor.getCount());
-
-        int columnDataIndex = cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
-        int columnIdIndex = cursor.getColumnIndex(MediaStore.Images.Thumbnails._ID);
-//        for (int i = 0; i < cursor.getCount(); i++) {
-//            cursor.moveToPosition(i);
-//            Log.d(TAG, "ImagePath: id=" + cursor.getLong(columnIdIndex) + " path=" + cursor.getString(columnDataIndex));
-//            paths[i] = cursor.getString(columnDataIndex);
-//        }
+        Log.d(TAG, "" + cursor.getColumnCount());
+        Log.d(TAG, "" + cursor.getCount());
         cursor.close();
-
         return paths;
     }
-
-
 }

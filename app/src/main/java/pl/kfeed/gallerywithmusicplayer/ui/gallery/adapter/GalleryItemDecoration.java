@@ -7,10 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-/**
- * Created by Kfeed on 24.10.2017.
- */
-
 public class GalleryItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mItemOffset;

@@ -1,9 +1,5 @@
 package pl.kfeed.gallerywithmusicplayer;
 
-/**
- * Created by Kfeed on 26.10.2017.
- */
-
 public class Constants {
 
     //Positions in Cursor with thumb and image
@@ -14,6 +10,5 @@ public class Constants {
     public static final int CURSOR_IMAGE_DATE = 4;
     public static final int CURSOR_IMAGE_NAME = 5;
     public static final int CURSOR_IMAGE_PATH = 6;
-
 
 }

@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 import pl.kfeed.gallerywithmusicplayer.R;
-import pl.kfeed.gallerywithmusicplayer.dagger.ActivityScoped;
+import pl.kfeed.gallerywithmusicplayer.injection.ActivityScoped;
 
 @ActivityScoped
 public class PlayerFragment extends DaggerFragment implements PlayerContract.View{

@@ -3,19 +3,15 @@ package pl.kfeed.gallerywithmusicplayer.ui.gallery;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 
+import java.util.Calendar;
 import java.util.List;
 
 import pl.kfeed.gallerywithmusicplayer.ui.base.BasePresenter;
 import pl.kfeed.gallerywithmusicplayer.ui.base.BaseView;
 
-/**
- * Created by Kfeed on 20.10.2017.
- */
-
 public interface GalleryContract {
 
-
-    interface Presenter extends BasePresenter<View>{
+    interface Presenter extends BasePresenter<View> {
 
         Cursor getThumbnailsAndImageCursor();
 
@@ -23,7 +19,7 @@ public interface GalleryContract {
 
         String getPathToImageOnPosition(int position);
 
-        String getDateFromImageOnPosition(int position);
+        Calendar getDateFromImageOnPosition(int position);
     }
 
     interface View extends BaseView<Presenter> {
@@ -31,8 +27,5 @@ public interface GalleryContract {
         void showError(String err);
 
         void showToast(String message);
-
     }
-
-
 }

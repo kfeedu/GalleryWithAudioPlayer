@@ -1,8 +1,4 @@
-package pl.kfeed.gallerywithmusicplayer.dagger;
-
-/**
- * Created by Kfeed on 20.10.2017.
- */
+package pl.kfeed.gallerywithmusicplayer.injection;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -19,5 +15,4 @@ import javax.inject.Scope;
 @Documented
 @Scope
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ActivityScoped {
-}
+public @interface ActivityScoped {}
