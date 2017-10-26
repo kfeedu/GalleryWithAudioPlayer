@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">GalleryWithMusicPlayer</string>
+    <string name="gallery_name">GALLERY</string>
+    <string name="player_name">PLAYER</string>
+</resources>

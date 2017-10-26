@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/popup_photo_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/transparent_grey_background">
+
+
+
+    <RelativeLayout
+        android:id="@+id/popup_info_section"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/popup_nav_height"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="@color/third_text"
+        >
+
+        <ImageButton
+            android:id="@+id/popup_back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_back_black_48px"
+            android:layout_alignParentStart="true"
+            android:paddingStart="16dp"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:background="@color/third_text"
+            />
+
+        <TextView
+            android:id="@+id/popup_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/primary_text"
+            android:text="17 Października, 2017"
+            android:paddingStart="72dp"
+            android:paddingTop="12dp"
+            android:fontFamily="sans-serif"/>
+
+        <TextView
+            android:id="@+id/popup_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/secondary_text"
+            android:textSize="14sp"
+            android:text="17:05"
+            android:paddingStart="72dp"
+            android:layout_below="@id/popup_date"
+            android:fontFamily="sans-serif-light"/>
+    </RelativeLayout>
+    <ImageView
+        android:id="@+id/popup_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/popup_info_section"
+        android:paddingTop="@dimen/popup_nav_height"/>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/popup_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_edit"
+        app:layout_anchor="@id/popup_image"
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_margin="16dp" />
+
+
+</android.support.design.widget.CoordinatorLayout>
