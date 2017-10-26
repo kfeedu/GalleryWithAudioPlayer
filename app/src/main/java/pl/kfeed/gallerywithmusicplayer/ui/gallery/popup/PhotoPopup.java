@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,16 +31,17 @@ public class PhotoPopup extends PopupWindow {
 
     private Context mContext;
 
-    public PhotoPopup(View contentView, int width, int height, boolean focusable, Context mContext, String imgPath, Calendar date) {
+    public PhotoPopup(View contentView, int width, int height, boolean focusable, Context context, String imgPath, Calendar date) {
         super(contentView, width, height, focusable);
-        this.mContext = mContext;
+        mContext = context;
         ButterKnife.bind(this, contentView);
         createView(imgPath, date);
     }
 
     private void createView(String photoPath, Calendar date) {
 
-        mDate.setText(date.get(Calendar.DAY_OF_MONTH) + " " + date.get(MONTH) + ", " + date.get(YEAR));
+        mDate.setText(date.get(Calendar.DAY_OF_MONTH) + " " + date.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault())
+                + ", " + date.get(YEAR));
         mTime.setText(date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE));
 
         //Setting image with picasso

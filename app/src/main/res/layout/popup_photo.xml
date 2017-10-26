@@ -51,9 +51,8 @@
             android:textSize="12sp"
             android:text="17:05"
             android:paddingStart="72dp"
-
             android:fontFamily="sans-serif-light"
-            android:paddingTop="30dp"/>
+            android:paddingTop="32dp"/>
     </RelativeLayout>
     <ImageView
         android:id="@+id/popup_image"
