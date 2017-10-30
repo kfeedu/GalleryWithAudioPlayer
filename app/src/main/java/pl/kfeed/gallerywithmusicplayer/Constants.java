@@ -11,4 +11,6 @@ public class Constants {
     public static final int CURSOR_IMAGE_NAME = 5;
     public static final int CURSOR_IMAGE_PATH = 6;
 
+    public static final String PHOTO_FILTER_INTENT_KEY = "photoToEdit";
+
 }
