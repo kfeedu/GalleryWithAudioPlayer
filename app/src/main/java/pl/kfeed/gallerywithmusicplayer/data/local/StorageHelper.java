@@ -44,16 +44,6 @@ public class StorageHelper {
         mContext = context;
     }
 
-    public File getAlbumStorageDir(String albumName) {
-        // Get the directory for the user's public pictures directory.
-        File file = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), albumName);
-        if (!file.mkdirs()) {
-            Log.e(TAG, "Directory not created");
-        }
-        return file;
-    }
-
     public boolean saveImageToInternalStorage(Bitmap bitmapImage, String fileName) {
         File directory = getAlbumStorageDir(Constants.PHOTO_SAVING_DIRECTORY);
         File myPath = new File(directory, fileName);
@@ -78,8 +68,17 @@ public class StorageHelper {
         return true;
     }
 
-    public Bitmap loadImageFromStorage(String path) {
+    public File getAlbumStorageDir(String albumName) {
+        // Get the directory for the user's public pictures directory.
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), albumName);
+        if (!file.mkdirs()) {
+            Log.e(TAG, "Directory not created");
+        }
+        return file;
+    }
 
+    public Bitmap loadImageFromStorage(String path) {
         Bitmap bitmap = null;
         try {
             File file = new File(path);
@@ -87,7 +86,6 @@ public class StorageHelper {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
         return bitmap;
     }
 
@@ -99,38 +97,6 @@ public class StorageHelper {
                     Log.i("ExternalStorage", "Scanned " + path + ":");
                     Log.i("ExternalStorage", "-> uri=" + uri);
                 });
-    }
-
-    public String[] fetchImagePathsFromExternalStorage() {
-        return fetchImagesPathFromStorage(IMAGE_EXTERNAL_STORAGE_URI);
-    }
-
-    public String[] fetchImagePathsFromInternalStorage() {
-        return fetchImagesPathFromStorage(IMAGE_INTERNAL_STORAGE_URI);
-    }
-
-    private String[] fetchImagesPathFromStorage(Uri storageType) {
-        final String[] columns = {MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
-        final String orderBy = MediaStore.Images.Media._ID;
-        //Stores all the images from the gallery in Cursor
-        Cursor cursor = MediaStore.Images.Media.query(mContext.getContentResolver(), storageType, columns, null, orderBy);
-
-        int count = cursor.getCount();
-
-        //Create an array to store path to all the images
-        String[] arrPath = new String[count];
-
-        for (int i = 0; i < count; i++) {
-            cursor.moveToPosition(i);
-            int dataColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-            //Store the path of the image
-            arrPath[i] = cursor.getString(dataColumnIndex);
-            Log.i("PATH", arrPath[i]);
-        }
-        // The cursor should be freed up after use with close()
-        cursor.close();
-
-        return arrPath;
     }
 
     public Cursor getCursorToImagesAndThumbnails() {

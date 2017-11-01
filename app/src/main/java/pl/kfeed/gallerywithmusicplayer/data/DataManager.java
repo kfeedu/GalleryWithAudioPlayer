@@ -27,14 +27,6 @@ public class DataManager {
         mStorageHelper = storageHelper;
     }
 
-    public String[] getPhotoPathsFromInternalStorage() {
-        return mStorageHelper.fetchImagePathsFromInternalStorage();
-    }
-
-    public String[] getPhotoPathsFromExternalStorage() {
-        return mStorageHelper.fetchImagePathsFromExternalStorage();
-    }
-
     public Cursor getPhotoAndThumbCursor() {
         return mStorageHelper.getCursorToImagesAndThumbnails();
     }
