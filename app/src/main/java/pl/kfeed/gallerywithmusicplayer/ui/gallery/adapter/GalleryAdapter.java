@@ -53,36 +53,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
                     .load("file://" + mThumbImageCursor.getString(0))
                     .fit()
                     .centerCrop()
-                    .placeholder(R.drawable.thumbnail)
+                    .placeholder(R.drawable.rick)
                     .into(holder.image);
         }
     }
 
-    private Bitmap getThumbnailFromCursor(int position) {
-        mThumbImageCursor.moveToPosition(position);
-        Bitmap thumbnail = null;
-        String thumbData = mThumbImageCursor.getString(0);  // thumb_path
-        if (thumbData != null) {
-            try {
-                thumbnail = BitmapFactory.decodeFile(thumbData);
-            } catch (Exception e) {
-                Log.e("myapp", "PhotoAdapter.bindView() can't find thumbnail (file) on disk (thumbdata = " + thumbData + ")");
-            }
-        } else {
-            String imgPath = mThumbImageCursor.getString(6);   // image_path
-            String imgId = mThumbImageCursor.getString(1);  // ID
-            Log.v("myapp", "PhotoAdapter.bindView() thumb path for image ID " + imgId + " is null. Trying to generate, with path = " + imgPath);
-
-            try {
-                thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imgPath), 72, 72);
-            } catch (Exception e) {
-                Log.e("myapp", "PhotoAdapter.bindView() can't generate thumbnail for image path: " + imgPath);
-            }
-        }
-        return thumbnail;
-    }
-
     public void updateCursor(Cursor newImageThumbCursor) {
+        mThumbImageCursor.close();
         mThumbImageCursor = newImageThumbCursor;
         notifyDataSetChanged();
     }
@@ -93,7 +70,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
     }
 
     public interface OnPhotoClick {
-        void photoClickedOnPosition(int position);
+        void showPhotoPopup(int position);
     }
 
     public class GalleryViewHolder extends RecyclerView.ViewHolder {
@@ -108,7 +85,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
                 @Override
                 public void onClick(View view) {
                     Log.d(TAG, "Item clicked on position: " + getAdapterPosition());
-                    mListener.photoClickedOnPosition(getAdapterPosition());
+                    mListener.showPhotoPopup(getAdapterPosition());
                 }
             });
         }

@@ -9,6 +9,8 @@ import android.graphics.Canvas;
 
 public class BaseFilter {
 
+    protected static final int BLACK_COLOR = 0;
+
     protected Bitmap image;
     protected int x_res;
     protected int y_res;

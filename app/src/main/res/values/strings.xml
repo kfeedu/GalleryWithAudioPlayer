@@ -2,4 +2,8 @@
     <string name="app_name">GalleryWithMusicPlayer</string>
     <string name="gallery_name">GALLERY</string>
     <string name="player_name">PLAYER</string>
+    <string name="save">save</string>
+    <string name="image_save_fail">Error: Image saving failed.</string>
+    <string name="image_save_success">Image saved successfully!</string>
+    <string name="refreshed">Refreshed!</string>
 </resources>

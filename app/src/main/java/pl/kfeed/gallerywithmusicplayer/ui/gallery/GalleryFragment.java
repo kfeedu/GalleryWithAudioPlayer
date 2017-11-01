@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,13 +30,16 @@ import pl.kfeed.gallerywithmusicplayer.ui.gallery.adapter.GalleryItemDecoration;
 import pl.kfeed.gallerywithmusicplayer.ui.gallery.popup.PhotoPopup;
 
 @ActivityScoped
-public class GalleryFragment extends DaggerFragment implements GalleryContract.View, GalleryAdapter.OnPhotoClick {
+public class GalleryFragment extends DaggerFragment implements GalleryContract.View,
+        GalleryAdapter.OnPhotoClick, SwipeRefreshLayout.OnRefreshListener{
 
     private final static int VERTICAL_NUMBER_OF_COLUMNS = 4;
     private final static int HORIZONTAL_NUMBER_OF_COLUMNS = 6;
 
     @BindView(R.id.galleryRecyclerView)
     RecyclerView mRecyclerView;
+    @BindView(R.id.gallerySwipeRefresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Inject
     GalleryPresenter mPresenter;
@@ -58,6 +63,7 @@ public class GalleryFragment extends DaggerFragment implements GalleryContract.V
         View view = inflater.inflate(R.layout.fragment_gallery, container, false);
         ButterKnife.bind(this, view);
         setupRecyclerView();
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         return view;
     }
 
@@ -70,14 +76,24 @@ public class GalleryFragment extends DaggerFragment implements GalleryContract.V
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    private void showPhotoPopup(String imgPath, Calendar date) {
+    @Override
+    public void onRefresh() {
+        mGalleryAdapter.updateCursor(mPresenter.getThumbnailsAndImageCursor());
+        mSwipeRefreshLayout.setRefreshing(false);
+        showToast(getString(R.string.refreshed));
+    }
+
+    //GalleryAdapter interface methods
+    @Override
+    public void showPhotoPopup(int position) {
         LayoutInflater inflater = (LayoutInflater) getActivity()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //Inflate the popup view
-        final View layout = inflater.inflate(R.layout.popup_photo,
-                (ViewGroup) getActivity().findViewById(R.id.popup_photo_layout));
-        mPopup = new PhotoPopup(layout, RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT, true, getActivity(), imgPath, date);
+        final View layout = inflater.inflate(R.layout.popup_photo_view,
+                getActivity().findViewById(R.id.popup_photo_layout));
+        mPopup = new PhotoPopup(layout, CoordinatorLayout.LayoutParams.MATCH_PARENT,
+                CoordinatorLayout.LayoutParams.MATCH_PARENT, true, getActivity(),
+                mImageThumbCursor, position);
         mPopup.showAtLocation(getView(), Gravity.CENTER, 0, 0);
         mPopup.setTouchable(true);
         mPopup.setBackgroundDrawable(new ColorDrawable());
@@ -102,12 +118,5 @@ public class GalleryFragment extends DaggerFragment implements GalleryContract.V
     @Override
     public void onDetach() {
         super.onDetach();
-    }
-
-    //GalleryAdapter interface methods
-    @Override
-    public void photoClickedOnPosition(int position) {
-        showPhotoPopup(mPresenter.getPathToImageOnPosition(position),
-                mPresenter.getDateFromImageOnPosition(position));
     }
 }

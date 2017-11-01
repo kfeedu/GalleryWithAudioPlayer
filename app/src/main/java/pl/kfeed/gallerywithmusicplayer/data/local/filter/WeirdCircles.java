@@ -27,7 +27,7 @@ public class WeirdCircles extends BaseFilter {
                 int circleId = (int) distance / 5;
 
                 if (circleId % 2 != 0) {
-                    image.setPixel(x, y, int2RGB(0, 0, 0));
+                    image.setPixel(x, y, BLACK_COLOR);
                 }
             }
         }

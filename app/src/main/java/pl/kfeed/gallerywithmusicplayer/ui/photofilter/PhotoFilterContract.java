@@ -2,6 +2,8 @@ package pl.kfeed.gallerywithmusicplayer.ui.photofilter;
 
 import android.graphics.Bitmap;
 
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import pl.kfeed.gallerywithmusicplayer.ui.base.BasePresenter;
 import pl.kfeed.gallerywithmusicplayer.ui.base.BaseView;
 
@@ -14,6 +16,11 @@ public interface PhotoFilterContract {
         void setGrowingCirclesPreview(String imgPath, int viewWidth, int viewHeight);
 
         void setRotatedCheckerPreview(String imgPath, int viewWidth, int viewHeight);
+
+        void stopPhotoProcessing();
+
+        void savePhoto(Bitmap bitmap);
+
     }
 
     interface View extends BaseView<PhotoFilterPresenter> {
@@ -23,5 +30,9 @@ public interface PhotoFilterContract {
         void showError(String err);
 
         void showToast(String message);
+
+        void showProgressBar();
+
+        void dismissProgressBar();
     }
 }

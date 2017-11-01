@@ -4,8 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import java.util.concurrent.Callable;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import io.reactivex.Single;
 
 /**
  * Created by Kfeed on 27.10.2017.
@@ -24,22 +28,22 @@ public class FilterHelper {
     private static final int WEIRD_CIRCLES_RADIUS = 50;
     private static final int ROTATED_CHECKER_SIZE = 50;
 
-    public Bitmap generateGrowingCircles(Bitmap bitmap) {
-        return GrowingCircles.onBitmap(bitmap)
+    public Single<Bitmap> generateGrowingCircles(Bitmap bitmap) {
+        return Single.fromCallable(() -> GrowingCircles.onBitmap(bitmap)
                 .setParameter(GROWING_CIRCLES_PARAMETER)
-                .makeGrowingCircles();
+                .makeGrowingCircles());
     }
 
-    public Bitmap generateWeirdCircles(Bitmap bitmap) {
-        return WeirdCircles.onBitmap(bitmap)
+    public Single<Bitmap> generateWeirdCircles(Bitmap bitmap) {
+        return Single.fromCallable(() -> WeirdCircles.onBitmap(bitmap)
                 .setRadius(WEIRD_CIRCLES_RADIUS)
-                .makeWeirdCircles();
+                .makeWeirdCircles());
     }
 
-    public Bitmap generateRotatedChecker(Bitmap bitmap) {
-        return RotatedChecker.onBitmap(bitmap)
+    public Single<Bitmap> generateRotatedChecker(Bitmap bitmap) {
+        return Single.fromCallable(() -> RotatedChecker.onBitmap(bitmap)
                 .setSquareSize(ROTATED_CHECKER_SIZE)
-                .makeRotatedChecker();
+                .makeRotatedChecker());
     }
 
     public Bitmap decodeSampledBitmapFromResource(String photoPath, int reqWidth, int reqHeight) {

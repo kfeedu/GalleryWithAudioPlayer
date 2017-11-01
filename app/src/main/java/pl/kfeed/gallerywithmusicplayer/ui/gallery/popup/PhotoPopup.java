@@ -2,6 +2,8 @@ package pl.kfeed.gallerywithmusicplayer.ui.gallery.popup;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -25,44 +27,32 @@ import static java.util.Calendar.YEAR;
 
 public class PhotoPopup extends PopupWindow {
 
-    @BindView(R.id.popup_date)
-    TextView mDate;
-    @BindView(R.id.popup_time)
-    TextView mTime;
-    @BindView(R.id.popup_image)
-    ImageView mImage;
+    @BindView(R.id.popupViewPager)
+    ViewPager mViewPager;
 
-    private String mPhotoPath;
+    private PhotoPopupAdapter mAdapter;
     private Context mContext;
 
-    public PhotoPopup(View contentView, int width, int height, boolean focusable, Context context, String photoPath, Calendar date) {
+    public PhotoPopup(View contentView, int width, int height, boolean focusable, Context context, Cursor imageThumbCursor, int position) {
         super(contentView, width, height, focusable);
         mContext = context;
-        mPhotoPath = photoPath;
         ButterKnife.bind(this, contentView);
-        createView(photoPath, date);
+        mAdapter = new PhotoPopupAdapter(context, imageThumbCursor);
+        mViewPager.setAdapter(mAdapter);
+        mViewPager.setCurrentItem(position);
     }
 
-    private void createView(String photoPath, Calendar date) {
-        mDate.setText(date.get(Calendar.DAY_OF_MONTH) + " " + date.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault())
-                + ", " + date.get(YEAR));
-        mTime.setText(date.get(Calendar.HOUR_OF_DAY) + ":" + date.get(Calendar.MINUTE));
-        Picasso.with(mContext).load("file://" + photoPath)
-                .placeholder(R.drawable.rick)
-                .fit()
-                .centerInside()
-                .into(mImage);
-    }
-
-    @OnClick(R.id.popup_fab)
-    void onClick(View view) {
+    @OnClick(R.id.popupFab)
+    void onFabClick() {
         Intent intent = new Intent(mContext, PhotoFilterActivity.class);
-        intent.putExtra(Constants.PHOTO_FILTER_INTENT_KEY, mPhotoPath);
+        intent.putExtra(Constants.PHOTO_FILTER_INTENT_KEY, mAdapter.getImagePathFromPosition(mViewPager.getCurrentItem()));
         mContext.startActivity(intent);
     }
 
-    @OnClick(R.id.popup_back_btn)
-    void onBackButtonClick(View view) {
+    @OnClick(R.id.popupBackBtn)
+    void onBackButtonClick() {
         dismiss();
     }
+
+
 }

@@ -4,11 +4,6 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
-import javax.inject.Singleton;
-
-/**
- * Created by Kfeed on 23.10.2017.
- */
 public class PermissionUtil {
 
     private static final int REQUEST_WRITE_PERMISSION = 786;

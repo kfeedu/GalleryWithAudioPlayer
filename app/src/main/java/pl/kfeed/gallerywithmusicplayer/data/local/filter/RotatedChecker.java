@@ -30,10 +30,10 @@ public class RotatedChecker extends BaseFilter {
 
                 if ((y2 + x_res + y_res) % (squareSize * 2) < squareSize) {
                     if ((x2 + x_res + y_res) % (squareSize * 2) < squareSize)
-                        image.setPixel(x, y, int2RGB(0, 0, 0));
+                        image.setPixel(x, y, BLACK_COLOR);
                 } else {
                     if (!((x2 + x_res + y_res) % (squareSize * 2) < squareSize))
-                        image.setPixel(x, y, int2RGB(0, 0, 0));
+                        image.setPixel(x, y, BLACK_COLOR);
                 }
             }
         }

@@ -6,9 +6,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".GalleryMusicPlayerApp"
+        android:name="com.orm.SugarApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -20,7 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.photofilter.PhotoFilterActivity"></activity>
+        <activity android:name=".ui.photofilter.PhotoFilterActivity" />
+        <activity android:name=".ui.player.song.SongActivity"></activity>
     </application>
 
 </manifest>

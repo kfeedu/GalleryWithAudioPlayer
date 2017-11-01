@@ -13,4 +13,6 @@ public class Constants {
 
     public static final String PHOTO_FILTER_INTENT_KEY = "photoToEdit";
 
+    public static final String PHOTO_SAVING_DIRECTORY = "GalleryProcessedImages";
+
 }

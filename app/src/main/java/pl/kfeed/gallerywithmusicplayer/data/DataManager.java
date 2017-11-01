@@ -8,6 +8,10 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import pl.kfeed.gallerywithmusicplayer.data.local.StorageHelper;
 import pl.kfeed.gallerywithmusicplayer.data.local.filter.FilterHelper;
 
@@ -18,40 +22,44 @@ public class DataManager {
     private final FilterHelper mFilterHelper;
 
     @Inject
-    DataManager(StorageHelper storageHelper, FilterHelper filterHelper){
+    DataManager(StorageHelper storageHelper, FilterHelper filterHelper) {
         mFilterHelper = filterHelper;
         mStorageHelper = storageHelper;
     }
 
-    public String[] getPhotoPathsFromInternalStorage(){
+    public String[] getPhotoPathsFromInternalStorage() {
         return mStorageHelper.fetchImagePathsFromInternalStorage();
     }
 
-    public String[] getPhotoPathsFromExternalStorage(){
+    public String[] getPhotoPathsFromExternalStorage() {
         return mStorageHelper.fetchImagePathsFromExternalStorage();
     }
 
-    public Cursor getPhotoAndThumbCursor(){
+    public Cursor getPhotoAndThumbCursor() {
         return mStorageHelper.getCursorToImagesAndThumbnails();
     }
 
-    public Bitmap getPhotoFromPath(String filePath){
+    public Bitmap getPhotoFromPath(String filePath) {
         return mStorageHelper.loadImageFromStorage(filePath);
     }
 
-    public Bitmap getDecodedSampledBitmap(String filePath, int viewWidth, int viewHeight){
+    public Bitmap getDecodedSampledBitmap(String filePath, int viewWidth, int viewHeight) {
         return mFilterHelper.decodeSampledBitmapFromResource(filePath, viewWidth, viewHeight);
     }
 
-    public Bitmap getGrowingCirclesPreview(String filePath,int  viewWidth,int viewHeight){
-        return mFilterHelper.generateGrowingCircles(getDecodedSampledBitmap(filePath, viewWidth, viewHeight ));
+    public Single<Bitmap> getGrowingCirclesPreview(String filePath, int viewWidth, int viewHeight) {
+        return mFilterHelper.generateGrowingCircles(getDecodedSampledBitmap(filePath, viewWidth, viewHeight));
     }
 
-    public Bitmap getWeirdCirclesPreview(String filePath, int viewWidth, int viewHeight) {
+    public Single<Bitmap> getWeirdCirclesPreview(String filePath, int viewWidth, int viewHeight) {
         return mFilterHelper.generateWeirdCircles(getDecodedSampledBitmap(filePath, viewWidth, viewHeight));
     }
 
-    public Bitmap getRotatedCheckerPreview(String filePath, int viewWidth, int viewHeight) {
+    public Single<Bitmap> getRotatedCheckerPreview(String filePath, int viewWidth, int viewHeight) {
         return mFilterHelper.generateRotatedChecker(getDecodedSampledBitmap(filePath, viewWidth, viewHeight));
+    }
+
+    public boolean saveImageToAppDir(Bitmap image, String fileName) {
+        return mStorageHelper.saveImageToInternalStorage(image, fileName + ".jpg");
     }
 }

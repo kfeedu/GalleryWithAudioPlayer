@@ -8,6 +8,7 @@ import android.database.CursorJoiner;
 import android.database.MatrixCursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import pl.kfeed.gallerywithmusicplayer.Constants;
 import pl.kfeed.gallerywithmusicplayer.R;
 
 @Singleton
@@ -52,9 +54,8 @@ public class StorageHelper {
         return file;
     }
 
-    private String saveImageToInternalStorage(Bitmap bitmapImage, String fileName) {
-        ContextWrapper cw = new ContextWrapper(mContext);
-        File directory = cw.getDir(Environment.DIRECTORY_PICTURES, Context.MODE_PRIVATE);
+    public boolean saveImageToInternalStorage(Bitmap bitmapImage, String fileName) {
+        File directory = getAlbumStorageDir(Constants.PHOTO_SAVING_DIRECTORY);
         File myPath = new File(directory, fileName);
 
         FileOutputStream fos = null;
@@ -64,6 +65,7 @@ public class StorageHelper {
             bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         } finally {
             try {
                 fos.close();
@@ -71,7 +73,9 @@ public class StorageHelper {
                 e.printStackTrace();
             }
         }
-        return directory.getAbsolutePath();
+        galleryAddPic(directory.getAbsolutePath());
+        Log.d(TAG, "Image saved to: " + directory.getAbsolutePath());
+        return true;
     }
 
     public Bitmap loadImageFromStorage(String path) {
@@ -85,6 +89,16 @@ public class StorageHelper {
         }
 
         return bitmap;
+    }
+
+    private void galleryAddPic(String photoPath) {
+        File file = new File(photoPath);
+        MediaScannerConnection.scanFile(mContext,
+                new String[]{file.toString()}, null,
+                (path, uri) -> {
+                    Log.i("ExternalStorage", "Scanned " + path + ":");
+                    Log.i("ExternalStorage", "-> uri=" + uri);
+                });
     }
 
     public String[] fetchImagePathsFromExternalStorage() {
@@ -207,27 +221,5 @@ public class StorageHelper {
         thumbCursor.close();
         imageCursor.close();
         return retCursor;
-    }
-
-    public String[] getThumbPaths() {
-        String[] projection = {MediaStore.Images.Thumbnails._ID, MediaStore.Images.Thumbnails.DATA, MediaStore.Images.Thumbnails.IMAGE_ID};
-        String orderBy = MediaStore.Images.Thumbnails._ID;
-        Cursor cursor = mContext.getContentResolver().query(THUMB_EXTERNAL_STORAGE_URI, projection, null, null, orderBy);
-        String[] paths = new String[cursor.getCount()];
-        Log.d(TAG, "" + cursor.getColumnCount());
-        Log.d(TAG, "" + cursor.getCount());
-        cursor.close();
-        return paths;
-    }
-
-    public String[] getImagePaths() {
-        String[] projection = {MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA};
-        String orderBy = MediaStore.Images.Media._ID;
-        Cursor cursor = mContext.getContentResolver().query(IMAGE_EXTERNAL_STORAGE_URI, projection, null, null, orderBy);
-        String[] paths = new String[cursor.getCount()];
-        Log.d(TAG, "" + cursor.getColumnCount());
-        Log.d(TAG, "" + cursor.getCount());
-        cursor.close();
-        return paths;
     }
 }

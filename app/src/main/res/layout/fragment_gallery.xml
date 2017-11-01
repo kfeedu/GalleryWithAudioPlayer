@@ -4,11 +4,17 @@
     android:layout_height="match_parent"
     tools:context="pl.kfeed.gallerywithmusicplayer.ui.gallery.GalleryFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/galleryRecyclerView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/gallerySwipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:padding="@dimen/gallery_space_between"/>
+        android:layout_height="match_parent">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/galleryRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="@dimen/gallery_space_between" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>
