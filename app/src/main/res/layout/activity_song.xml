@@ -5,7 +5,7 @@
     android:id="@+id/songActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/third_text"
+    android:background="@color/primary_light"
     android:gravity="center"
     android:orientation="horizontal"
     tools:context=".ui.player.song.SongActivity">
@@ -40,6 +40,46 @@
                 android:textColor="@color/primary_text"
                 android:textSize="24sp" />
 
+
+            <LinearLayout
+                android:id="@+id/songDurationArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/songBtnArea"
+                android:layout_alignParentStart="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/songActualTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:text="00:00"
+                    android:maxLines="1"
+                    android:layout_weight="0"
+                    android:textColor="@color/primary_text"
+                    android:textSize="14sp"
+                    android:paddingLeft="8dp"/>
+
+                <SeekBar
+                    android:id="@+id/songSeekBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/songMaxTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:textSize="14sp"
+                    android:layout_weight="0"
+                    android:maxLines="1"
+                    android:paddingEnd="8dp"
+                    android:textColor="@color/primary_text"
+                    android:text="4:20"/>
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/songArtist"
                 android:layout_width="match_parent"
@@ -53,13 +93,6 @@
                 android:textColor="@color/secondary_text"
                 android:textSize="14sp" />
 
-            <SeekBar
-                android:id="@+id/songSeekBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/songBtnArea"
-                android:layout_alignParentStart="true"
-                android:max="100" />
 
             <LinearLayout
                 android:id="@+id/songBtnArea"
@@ -82,7 +115,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:src="@drawable/ic_stop_black_48px" />
+                    android:src="@drawable/ic_stop_black_48px"/>
 
                 <ImageButton
                     android:id="@+id/songPlayPauseBtn"

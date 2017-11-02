@@ -33,6 +33,7 @@ public class MusicPlayerService extends DaggerService {
 
     private MediaPlayer mMediaPlayer;
     private int currentPosition;
+    private int currentSongId;
 
     @Override
     public void onCreate() {
@@ -136,12 +137,30 @@ public class MusicPlayerService extends DaggerService {
         }
     }
 
+    public void seekTo(int position){
+        mMediaPlayer.pause();
+        mMediaPlayer.seekTo(position);
+        mMediaPlayer.start();
+    }
+
     public boolean isPlaying() {
         return mMediaPlayer.isPlaying();
     }
 
+    public int getRealPosition() {
+        return mMediaPlayer.getCurrentPosition();
+    }
+
     public int getCurrentPosition() {
         return currentPosition;
+    }
+
+    public int getCurrentSongId() {
+        return currentSongId;
+    }
+
+    public void setCurrentSongId(int currentSongId) {
+        this.currentSongId = currentSongId;
     }
 
     private MediaPlayer.OnCompletionListener onCompletion = new MediaPlayer.OnCompletionListener() {

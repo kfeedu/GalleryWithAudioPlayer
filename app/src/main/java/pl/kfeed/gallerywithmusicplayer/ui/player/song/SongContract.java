@@ -13,7 +13,9 @@ public interface SongContract {
 
     interface Presenter extends BasePresenter<View> {
 
-        void prepareService(int position);
+        void prepareService(int position, Activity activity);
+
+        void setupViewWithSongData(Activity activity);
 
         void stopServiceIfNotPlaying();
 
@@ -25,8 +27,7 @@ public interface SongContract {
 
         void prevSong();
 
-        void registerForCallbacks(Activity activity);
-
+        void seekTo(int position);
 
     }
 
@@ -41,5 +42,9 @@ public interface SongContract {
         void setPauseButton();
 
         void setPlayButton();
+
+        void setMaxDuration(int maxDuration);
+
+        void updateProgress(int progress);
     }
 }

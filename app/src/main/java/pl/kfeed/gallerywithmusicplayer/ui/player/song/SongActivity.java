@@ -10,12 +10,18 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -40,6 +46,12 @@ public class SongActivity extends DaggerAppCompatActivity implements SongContrac
     TextView mArtsit;
     @BindView(R.id.songPlayPauseBtn)
     ImageButton mPlayPauseBtn;
+    @BindView(R.id.songSeekBar)
+    SeekBar mSeekBar;
+    @BindView(R.id.songActualTime)
+    TextView mActualTime;
+    @BindView(R.id.songMaxTime)
+    TextView mMaxTime;
 
     @Inject
     SongPresenter mPresenter;
@@ -54,10 +66,29 @@ public class SongActivity extends DaggerAppCompatActivity implements SongContrac
 
         Intent intent = getIntent();
         mActualPosition = intent.getIntExtra(Constants.SONG_ACTIVITY_INTENT_POSITION, 0);
-        mPresenter.prepareService(mActualPosition);
+        mPresenter.prepareService(mActualPosition, this);
+        mPresenter.setupViewWithSongData(this);
 
-        final Handler handler = new Handler();
-        handler.postDelayed(() -> mPresenter.registerForCallbacks(this), 200);
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser){
+                    mPresenter.seekTo(progress * 1000);
+                    updateProgress(progress);
+                }
+            }
+        });
     }
 
     @Override
@@ -120,5 +151,23 @@ public class SongActivity extends DaggerAppCompatActivity implements SongContrac
     @Override
     public void songEnded() {
         mPlayPauseBtn.setImageResource(R.drawable.ic_pause_black_48px);
+    }
+
+    @Override
+    public void setMaxDuration(int maxDuration) {
+        Log.d(TAG, "SeekBar maxDuration=" + maxDuration);
+        mSeekBar.setMax(maxDuration);
+        SimpleDateFormat sdf = new SimpleDateFormat("mm:ss", Locale.getDefault());
+        Date date = new Date(maxDuration * 1000);
+        mMaxTime.setText(sdf.format(date));
+    }
+
+    @Override
+    public void updateProgress(int progress) {
+        Log.d(TAG, "Updating SeekBar: progress=" + progress);
+        mSeekBar.setProgress(progress);
+        SimpleDateFormat sdf = new SimpleDateFormat("mm:ss", Locale.getDefault());
+        Date date = new Date(progress * 1000);
+        mActualTime.setText(sdf.format(date));
     }
 }

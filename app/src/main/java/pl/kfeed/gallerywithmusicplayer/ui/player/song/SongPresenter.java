@@ -9,7 +9,7 @@ import android.database.Cursor;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.MediaStore;
-import android.widget.Toast;
+import android.util.Log;
 
 import javax.inject.Inject;
 
@@ -19,6 +19,8 @@ import pl.kfeed.gallerywithmusicplayer.data.model.Song;
 import pl.kfeed.gallerywithmusicplayer.service.MusicPlayerService;
 
 public class SongPresenter implements SongContract.Presenter {
+
+    private static final String TAG = SongPresenter.class.getSimpleName();
 
     private SongContract.View mView;
     private DataManager mDataManager;
@@ -76,6 +78,7 @@ public class SongPresenter implements SongContract.Presenter {
         }
         mView.setPauseButton();
         dataHasChangedWhilePlaying = false;
+
     }
 
     private void unpauseSong() {
@@ -87,7 +90,7 @@ public class SongPresenter implements SongContract.Presenter {
     public void nextSong() {
         if (mSongCursor.getCount() > actualPosition + 1) {
             actualPosition++;
-            setViewsWithSongData();
+            setupViewWithSongData(null);
             playSong();
         } else {
             mView.showToast(mContext.getString(R.string.last_song));
@@ -98,39 +101,63 @@ public class SongPresenter implements SongContract.Presenter {
     public void prevSong() {
         if (actualPosition > 0) {
             actualPosition--;
-            setViewsWithSongData();
+            setupViewWithSongData(null);
             playSong();
         } else {
             mView.showToast(mContext.getString(R.string.first_song));
         }
     }
 
-    private void setViewsWithSongData() {
+    @Override
+    public void setupViewWithSongData(Activity activity) {
         mSongCursor.moveToPosition(actualPosition);
         String newArtist = mSongCursor.getString(mSongCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
         String newTitle = mSongCursor.getString(mSongCursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
         mView.setArtist(newArtist);
         mView.setTitle(newTitle);
+        mView.setMaxDuration(getDuration() / 1000);
+
+        if (activity != null) {
+            final Handler seekBarHandler = new Handler();
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mMusicService != null) {
+                        if(mMusicService.isPlaying() && !dataHasChangedWhilePlaying){
+                            mView.updateProgress(mMusicService.getRealPosition() / 1000);
+                        }else{
+                            mView.updateProgress(0);
+                        }
+                    }
+                    seekBarHandler.postDelayed(this, 1000);
+                }
+            });
+        }
     }
 
     @Override
-    public void prepareService(int position) {
+    public void prepareService(int position, Activity activity) {
         if (mSongCursor == null)
             mSongCursor = mDataManager.getSongCursor();
         if (!mIsBound)
             doBindService();
         if (position != actualPosition) {
+            Log.d(TAG, "position="+position + " actualPosition="+actualPosition );
             actualPosition = position;
             dataHasChangedWhilePlaying = true;
         }
-        setViewsWithSongData();
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> registerForCallbacks(activity), 200);
     }
 
-    @Override
-    public void registerForCallbacks(Activity activity) {
+    private void registerForCallbacks(Activity activity) {
         if (mIsBound) mMusicService.registerCallbackClient(activity);
     }
 
+    @Override
+    public void seekTo(int position) {
+        mMusicService.seekTo(position);
+    }
 
     @Override
     public void stopServiceIfNotPlaying() {
@@ -145,6 +172,10 @@ public class SongPresenter implements SongContract.Presenter {
 
     private String getSongData() {
         return mSongCursor.getString(mSongCursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+    }
+
+    private int getDuration() {
+        return Integer.valueOf(mSongCursor.getString(mSongCursor.getColumnIndex(MediaStore.Audio.Media.DURATION)));
     }
 
     @Override
