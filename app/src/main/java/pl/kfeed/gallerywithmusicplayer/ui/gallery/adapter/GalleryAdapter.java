@@ -80,12 +80,9 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
         public GalleryViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d(TAG, "Item clicked on position: " + getAdapterPosition());
-                    mListener.showPhotoPopup(getAdapterPosition());
-                }
+            itemView.setOnClickListener(view -> {
+                Log.d(TAG, "Item clicked on position: " + getAdapterPosition());
+                mListener.showPhotoPopup(getAdapterPosition());
             });
         }
     }

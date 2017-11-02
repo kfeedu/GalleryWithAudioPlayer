@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,16 @@ import pl.kfeed.gallerywithmusicplayer.R;
 
 public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder> {
 
+    private final static String TAG = PlayerAdapter.class.getSimpleName();
+
     private Cursor mSongCursor;
     private Context mContext;
+    private OnSongClick mListener;
 
-    public PlayerAdapter(Context context, Cursor songCursor) {
+    public PlayerAdapter(Context context, Cursor songCursor, OnSongClick listener) {
         mSongCursor = songCursor;
         mContext = context;
+        mListener = listener;
     }
 
     @Override
@@ -43,8 +48,18 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
     }
 
     public void updateCursor(Cursor newSongCursor) {
+        closeCursor();
         mSongCursor = newSongCursor;
         notifyDataSetChanged();
+    }
+
+    public void closeCursor(){
+        if(!mSongCursor.isClosed())
+            mSongCursor.close();
+    }
+
+    public interface OnSongClick {
+        void startSongActivity(int position);
     }
 
     class PlayerViewHolder extends RecyclerView.ViewHolder {
@@ -56,6 +71,10 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
         public PlayerViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener((view) -> {
+                Log.d(TAG, "Item clicked on position: " + getAdapterPosition());
+                mListener.startSongActivity(getAdapterPosition());
+            });
         }
     }
 }

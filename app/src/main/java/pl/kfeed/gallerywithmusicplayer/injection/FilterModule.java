@@ -20,5 +20,4 @@ public abstract class FilterModule {
     @ActivityScoped
     @Binds
     abstract PhotoFilterContract.Presenter photoFilterPresenter(PhotoFilterPresenter photoFilterPresenter);
-
 }

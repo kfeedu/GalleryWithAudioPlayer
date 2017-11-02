@@ -14,7 +14,8 @@ import pl.kfeed.gallerywithmusicplayer.GalleryMusicPlayerApp;
 @Singleton
 @Component(modules = {ApplicationModule.class,
         ActivityBindingModule.class,
-        AndroidSupportInjectionModule.class})
+        AndroidSupportInjectionModule.class,
+        MusicPlayerServiceModule.class})
 
 public interface AppComponent extends AndroidInjector<DaggerApplication> {
 

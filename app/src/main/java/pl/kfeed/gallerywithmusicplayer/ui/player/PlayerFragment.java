@@ -1,6 +1,7 @@
 package pl.kfeed.gallerywithmusicplayer.ui.player;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,12 +21,14 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerFragment;
+import pl.kfeed.gallerywithmusicplayer.Constants;
 import pl.kfeed.gallerywithmusicplayer.R;
 import pl.kfeed.gallerywithmusicplayer.injection.ActivityScoped;
+import pl.kfeed.gallerywithmusicplayer.ui.player.song.SongActivity;
 
 @ActivityScoped
 public class PlayerFragment extends DaggerFragment implements PlayerContract.View,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener, PlayerAdapter.OnSongClick {
 
     private static final String TAG = PlayerFragment.class.getSimpleName();
 
@@ -37,8 +40,6 @@ public class PlayerFragment extends DaggerFragment implements PlayerContract.Vie
     @Inject
     PlayerPresenter mPresenter;
     private PlayerAdapter mPlayerAdapter;
-
-    private Cursor mSongCursor;
 
     @Inject
     public PlayerFragment(){}
@@ -60,8 +61,7 @@ public class PlayerFragment extends DaggerFragment implements PlayerContract.Vie
     }
 
     private void setupRecyclerView(){
-        mSongCursor = mPresenter.getSongCursor();
-        mPlayerAdapter = new PlayerAdapter(getActivity(), mSongCursor);
+        mPlayerAdapter = new PlayerAdapter(getActivity(), mPresenter.getSongCursor(), this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mPlayerAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -76,6 +76,14 @@ public class PlayerFragment extends DaggerFragment implements PlayerContract.Vie
         showToast(getString(R.string.refreshed));
     }
 
+    //RecyclerView Adapter method
+    @Override
+    public void startSongActivity(int position) {
+        Intent intent = new Intent(getActivity(), SongActivity.class);
+        intent.putExtra(Constants.SONG_ACTIVITY_INTENT_POSITION, position);
+        startActivity(intent);
+    }
+
     //MVP methods
     @Override
     public void onAttach(Context context) {
@@ -87,6 +95,18 @@ public class PlayerFragment extends DaggerFragment implements PlayerContract.Vie
     public void onDetach() {
         super.onDetach();
         mPresenter.detachView();
+    }
+
+    @Override
+    public void onPause() {
+        mPlayerAdapter.closeCursor();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.refreshData();
     }
 
     @Override

@@ -6,4 +6,14 @@
     <string name="image_save_fail">Error: Image saving failed.</string>
     <string name="image_save_success">Image saved successfully!</string>
     <string name="refreshed">Refreshed!</string>
+    <string name="service_started">Music Player Service has started!</string>
+    <string name="service_stopped">Music Player Service has stopped!</string>
+    <string name="service_name">Music Player</string>
+    <string name="service_connected">Service connected.</string>
+    <string name="service_disconnected">Service disconnected.</string>
+    <string name="last_song">Last song.</string>
+    <string name="first_song">This is first song.</string>
+    <string name="service_is_running">Music Player is launched!</string>
+    <string name="track_resumed_from_saved">Track resumed from previous pause time.</string>
+    <string name="pause_position_saved">Pause position saved.</string>
 </resources>

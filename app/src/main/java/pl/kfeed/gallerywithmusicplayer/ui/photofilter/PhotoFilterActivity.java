@@ -45,7 +45,7 @@ public class PhotoFilterActivity extends DaggerAppCompatActivity implements Phot
         setContentView(R.layout.activity_photo_filter);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        mPhotoPath = intent.getStringExtra(Constants.PHOTO_FILTER_INTENT_KEY);
+        mPhotoPath = intent.getStringExtra(Constants.PHOTO_FILTER_INTENT_PHOTO_PATH);
         loadImageToPreview();
     }
 

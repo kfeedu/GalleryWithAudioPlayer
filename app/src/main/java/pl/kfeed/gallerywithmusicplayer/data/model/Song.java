@@ -1,32 +1,18 @@
 package pl.kfeed.gallerywithmusicplayer.data.model;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
 
-public class Song extends SugarRecord<Song> {
+public class Song extends SugarRecord {
 
-    int songId;
-    long pauseTime;
+    @Unique
+    public String songId;
+    public int pauseTime;
 
     public Song() {}
 
-    public Song(int songId, long pauseTime) {
+    public Song(String songId, int pauseTime) {
         this.songId = songId;
         this.pauseTime = pauseTime;
-    }
-
-    public int getSongId() {
-        return songId;
-    }
-
-    public void setSongId(int songId) {
-        this.songId = songId;
-    }
-
-    public long getTimeOfPause() {
-        return pauseTime;
-    }
-
-    public void setTimeOfPause(long timeOfPause) {
-        this.pauseTime = timeOfPause;
     }
 }

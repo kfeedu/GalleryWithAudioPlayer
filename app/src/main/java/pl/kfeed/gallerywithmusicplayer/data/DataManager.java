@@ -63,11 +63,15 @@ public class DataManager {
         return mStorageHelper.getSongCursor();
     }
 
-    public Song getSong(int songId){
+    public Song getSong(String songId){
         return mDbHelper.getSong(songId);
     }
 
-    public void updateSong(int songId, long pauseTime){
+    public void updateSong(String songId, int pauseTime){
         mDbHelper.updateSong(songId, pauseTime);
+    }
+
+    public void removeSong(String songId){
+        mDbHelper.removeSongFromDb(songId);
     }
 }
