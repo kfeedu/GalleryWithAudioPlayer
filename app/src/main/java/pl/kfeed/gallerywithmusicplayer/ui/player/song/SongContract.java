@@ -15,8 +15,6 @@ public interface SongContract {
 
         void prepareService(int position, Activity activity);
 
-        void setupViewWithSongData(Activity activity);
-
         void stopServiceIfNotPlaying();
 
         void stopSong();

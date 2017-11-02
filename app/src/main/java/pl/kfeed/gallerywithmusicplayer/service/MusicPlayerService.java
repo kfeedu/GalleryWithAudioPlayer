@@ -32,8 +32,9 @@ public class MusicPlayerService extends DaggerService {
     private final IBinder mBinder = new LocalBinder();
 
     private MediaPlayer mMediaPlayer;
-    private int currentPosition;
-    private int currentSongId;
+    private boolean mIsPaused;
+    private boolean mIsStopped;
+    private int mActualPlayingSongPosition;
 
     @Override
     public void onCreate() {
@@ -72,6 +73,83 @@ public class MusicPlayerService extends DaggerService {
         super.onDestroy();
     }
 
+    public void startPlayingSong(String filePath, int actualPosition) {
+        if(actualPosition == mActualPlayingSongPosition){
+            if(mIsPaused)
+                resumeSong();
+        }else{
+            mActualPlayingSongPosition = actualPosition;
+            mMediaPlayer.reset();
+            try {
+                mMediaPlayer.setDataSource(filePath);
+                mMediaPlayer.prepare();
+                mMediaPlayer.start();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        mIsStopped = false;
+        mIsPaused = false;
+    }
+
+    public void resumeSong(){
+        if(mIsPaused){
+            mMediaPlayer.start();
+            mIsPaused = false;
+        }
+    }
+
+    public void pauseSong() {
+        if(mMediaPlayer.isPlaying()){
+            mMediaPlayer.pause();
+            mIsPaused = true;
+        }
+    }
+
+    public void seekTo(int newPosition){
+        if(mIsStopped){
+            try{
+                mMediaPlayer.prepare();
+            }catch(IOException exception){
+                exception.printStackTrace();
+            }
+        }
+        mMediaPlayer.seekTo(newPosition);
+    }
+
+    public void stopSong(){
+        mMediaPlayer.stop();
+        mIsStopped = true;
+    }
+
+    public boolean isPlaying(){
+        return mMediaPlayer.isPlaying();
+    }
+
+    public boolean isPaused() {
+        return mIsPaused;
+    }
+
+    public boolean isStopped() {
+        return mIsStopped;
+    }
+
+    public int getActualPlayingSongPosition() {
+        return mActualPlayingSongPosition;
+    }
+
+    public int getCurrentPlayingTime(){
+        if(isStopped()){
+            return 0;
+        }else{
+            return mMediaPlayer.getCurrentPosition();
+        }
+    }
+
     private void showNotification() {
         CharSequence text = getText(R.string.service_is_running);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
@@ -88,85 +166,11 @@ public class MusicPlayerService extends DaggerService {
         mNotificationManager.notify(NOTIFICATION, notification);
     }
 
-    public void startPlaying(String filePath) {
-        mMediaPlayer.stop();
-        mMediaPlayer.reset();
-        try {
-            mMediaPlayer.setDataSource(filePath);
-            mMediaPlayer.prepare();
-            mMediaPlayer.start();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void stopPlaying() {
-        mMediaPlayer.stop();
-        mMediaPlayer.reset();
-        currentPosition = 0;
-    }
-
-    public void pausePlaying() {
-        mMediaPlayer.pause();
-        currentPosition = mMediaPlayer.getCurrentPosition();
-    }
-
-    public void unPausePlaying() {
-        mMediaPlayer.seekTo(currentPosition);
-        mMediaPlayer.start();
-    }
-
-    public void startPlayingFromPosition(String filePath, int position) {
-        mMediaPlayer.stop();
-        mMediaPlayer.reset();
-        try {
-            mMediaPlayer.setDataSource(filePath);
-            mMediaPlayer.prepare();
-            mMediaPlayer.seekTo(position);
-            mMediaPlayer.start();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void seekTo(int position){
-        mMediaPlayer.pause();
-        mMediaPlayer.seekTo(position);
-        mMediaPlayer.start();
-    }
-
-    public boolean isPlaying() {
-        return mMediaPlayer.isPlaying();
-    }
-
-    public int getRealPosition() {
-        return mMediaPlayer.getCurrentPosition();
-    }
-
-    public int getCurrentPosition() {
-        return currentPosition;
-    }
-
-    public int getCurrentSongId() {
-        return currentSongId;
-    }
-
-    public void setCurrentSongId(int currentSongId) {
-        this.currentSongId = currentSongId;
-    }
-
     private MediaPlayer.OnCompletionListener onCompletion = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
-            stopPlaying();
+            mMediaPlayer.stop();
+            mIsStopped = true;
             mCallbackActivity.songEnded();
         }
     };

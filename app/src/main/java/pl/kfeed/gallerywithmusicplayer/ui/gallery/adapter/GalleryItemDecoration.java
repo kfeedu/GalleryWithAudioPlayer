@@ -15,8 +15,8 @@ public class GalleryItemDecoration extends RecyclerView.ItemDecoration {
         mItemOffset = itemOffset;
     }
 
-    public GalleryItemDecoration(@NonNull Context context, @DimenRes int itemOffsetId) {
-        this(context.getResources().getDimensionPixelSize(itemOffsetId));
+    public GalleryItemDecoration(@NonNull Context context, int itemOffset) {
+        this(itemOffset);
     }
 
     @Override

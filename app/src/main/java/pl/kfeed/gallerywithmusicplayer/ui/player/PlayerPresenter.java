@@ -18,6 +18,11 @@ public final class PlayerPresenter implements PlayerContract.Presenter {
     }
 
     @Override
+    public Cursor getSongCursor() {
+        return mDataManager.getSongCursor();
+    }
+
+    @Override
     public void refreshData() {
         mView.updateAdapter(getSongCursor());
     }
@@ -30,10 +35,5 @@ public final class PlayerPresenter implements PlayerContract.Presenter {
     @Override
     public void detachView() {
         mView = null;
-    }
-
-    @Override
-    public Cursor getSongCursor() {
-        return mDataManager.getSongCursor();
     }
 }

@@ -1,9 +1,11 @@
 package pl.kfeed.gallerywithmusicplayer.ui.gallery;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,6 +15,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -23,18 +26,17 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerFragment;
+import pl.kfeed.gallerywithmusicplayer.Constants;
 import pl.kfeed.gallerywithmusicplayer.R;
 import pl.kfeed.gallerywithmusicplayer.injection.ActivityScoped;
 import pl.kfeed.gallerywithmusicplayer.ui.gallery.adapter.GalleryAdapter;
 import pl.kfeed.gallerywithmusicplayer.ui.gallery.adapter.GalleryItemDecoration;
 import pl.kfeed.gallerywithmusicplayer.ui.gallery.popup.PhotoPopup;
+import pl.kfeed.gallerywithmusicplayer.util.ColumnsSpacingUtil;
 
 @ActivityScoped
 public class GalleryFragment extends DaggerFragment implements GalleryContract.View,
-        GalleryAdapter.OnPhotoClick, SwipeRefreshLayout.OnRefreshListener{
-
-    private final static int VERTICAL_NUMBER_OF_COLUMNS = 4;
-    private final static int HORIZONTAL_NUMBER_OF_COLUMNS = 6;
+        GalleryAdapter.OnPhotoClick, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.galleryRecyclerView)
     RecyclerView mRecyclerView;
@@ -64,16 +66,23 @@ public class GalleryFragment extends DaggerFragment implements GalleryContract.V
         ButterKnife.bind(this, view);
         setupRecyclerView();
         mSwipeRefreshLayout.setOnRefreshListener(this);
+
+        if (mPopup != null) {
+            mPopup.showAtLocation(getView(), Gravity.CENTER, 0, 0);
+        }
+
         return view;
     }
 
     private void setupRecyclerView() {
         mImageThumbCursor = mPresenter.getThumbnailsAndImageCursor();
         mGalleryAdapter = new GalleryAdapter(getActivity(), mImageThumbCursor, this);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), VERTICAL_NUMBER_OF_COLUMNS));
         mRecyclerView.setAdapter(mGalleryAdapter);
-        mRecyclerView.addItemDecoration(new GalleryItemDecoration(getActivity(), R.dimen.gallery_space_between));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        ColumnsSpacingUtil csUtil = new ColumnsSpacingUtil(getActivity(), R.layout.gallery_view_holder);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), csUtil.calculateNoOfColumns()));
+        mRecyclerView.addItemDecoration(new GalleryItemDecoration(getActivity(), csUtil.calculateSpacing()));
     }
 
     @Override
@@ -123,4 +132,18 @@ public class GalleryFragment extends DaggerFragment implements GalleryContract.V
         mPresenter.detachView();
         super.onDetach();
     }
+
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        if (mPopup != null)
+//            outState.putInt(Constants.POPUP_SAVE_STATE_POSITION_KEY, mPopup.getViewPosition());
+//        super.onSaveInstanceState(outState);
+//    }
+//
+//    @Override
+//    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+//        if (savedInstanceState != null)
+//            showPhotoPopup(savedInstanceState.getInt(Constants.POPUP_SAVE_STATE_POSITION_KEY));
+//        super.onViewStateRestored(savedInstanceState);
+//    }
 }

@@ -20,4 +20,7 @@ public class Constants {
     //App directory
     public static final String PHOTO_SAVING_DIRECTORY = "GalleryProcessedImages";
 
+    //GallerySavedStateKeys
+    public static final String POPUP_SAVE_STATE_POSITION_KEY = "popupPosition";
+
 }

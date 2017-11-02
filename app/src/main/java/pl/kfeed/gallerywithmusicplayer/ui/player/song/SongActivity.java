@@ -1,14 +1,6 @@
 package pl.kfeed.gallerywithmusicplayer.ui.player.song;
 
-import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.Binder;
-import android.os.Handler;
-import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,8 +8,6 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,7 +19,6 @@ import javax.inject.Singleton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import dagger.Provides;
 import dagger.android.support.DaggerAppCompatActivity;
 import pl.kfeed.gallerywithmusicplayer.Constants;
 import pl.kfeed.gallerywithmusicplayer.R;
@@ -43,7 +32,7 @@ public class SongActivity extends DaggerAppCompatActivity implements SongContrac
     @BindView(R.id.songTitle)
     TextView mTitle;
     @BindView(R.id.songArtist)
-    TextView mArtsit;
+    TextView mArtist;
     @BindView(R.id.songPlayPauseBtn)
     ImageButton mPlayPauseBtn;
     @BindView(R.id.songSeekBar)
@@ -56,8 +45,6 @@ public class SongActivity extends DaggerAppCompatActivity implements SongContrac
     @Inject
     SongPresenter mPresenter;
 
-    private int mActualPosition;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,21 +52,15 @@ public class SongActivity extends DaggerAppCompatActivity implements SongContrac
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
-        mActualPosition = intent.getIntExtra(Constants.SONG_ACTIVITY_INTENT_POSITION, 0);
-        mPresenter.prepareService(mActualPosition, this);
-        mPresenter.setupViewWithSongData(this);
-
+        int actualPosition = intent.getIntExtra(Constants.SONG_ACTIVITY_INTENT_POSITION, 0);
+        mPresenter.prepareService(actualPosition, this);
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -135,7 +116,7 @@ public class SongActivity extends DaggerAppCompatActivity implements SongContrac
 
     @Override
     public void setArtist(String newArtist) {
-        mArtsit.setText(newArtist);
+        mArtist.setText(newArtist);
     }
 
     @Override

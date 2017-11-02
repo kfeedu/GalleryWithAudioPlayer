@@ -68,7 +68,6 @@ public class PlayerFragment extends DaggerFragment implements PlayerContract.Vie
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));
     }
 
-
     @Override
     public void onRefresh() {
         mPresenter.refreshData();
@@ -76,15 +75,6 @@ public class PlayerFragment extends DaggerFragment implements PlayerContract.Vie
         showToast(getString(R.string.refreshed));
     }
 
-    //RecyclerView Adapter method
-    @Override
-    public void startSongActivity(int position) {
-        Intent intent = new Intent(getActivity(), SongActivity.class);
-        intent.putExtra(Constants.SONG_ACTIVITY_INTENT_POSITION, position);
-        startActivity(intent);
-    }
-
-    //MVP methods
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -98,17 +88,20 @@ public class PlayerFragment extends DaggerFragment implements PlayerContract.Vie
     }
 
     @Override
-    public void onPause() {
-        mPlayerAdapter.closeCursor();
-        super.onPause();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         mPresenter.refreshData();
     }
 
+    //RecyclerView Adapter method
+    @Override
+    public void startSongActivity(int position) {
+        Intent intent = new Intent(getActivity(), SongActivity.class);
+        intent.putExtra(Constants.SONG_ACTIVITY_INTENT_POSITION, position);
+        startActivity(intent);
+    }
+
+    //MVP method
     @Override
     public void updateAdapter(Cursor songCursor) {
         mPlayerAdapter.updateCursor(songCursor);

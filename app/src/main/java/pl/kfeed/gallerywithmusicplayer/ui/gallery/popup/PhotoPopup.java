@@ -21,6 +21,7 @@ public class PhotoPopup extends PopupWindow {
 
     private PhotoPopupAdapter mAdapter;
     private Context mContext;
+    private int mViewPosition;
 
     public PhotoPopup(View contentView, int width, int height, boolean focusable, Context context, Cursor imageThumbCursor, int position) {
         super(contentView, width, height, focusable);
@@ -29,6 +30,7 @@ public class PhotoPopup extends PopupWindow {
         mAdapter = new PhotoPopupAdapter(context, imageThumbCursor);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setCurrentItem(position);
+        mViewPosition = position;
     }
 
     @OnClick(R.id.popupFab)
@@ -43,5 +45,7 @@ public class PhotoPopup extends PopupWindow {
         dismiss();
     }
 
-
+    public int getViewPosition() {
+        return mViewPosition;
+    }
 }

@@ -22,15 +22,14 @@ public class SongPresenter implements SongContract.Presenter {
 
     private static final String TAG = SongPresenter.class.getSimpleName();
 
+    private Context mContext;
     private SongContract.View mView;
     private DataManager mDataManager;
-
     private MusicPlayerService mMusicService;
-    private boolean mIsBound;
-    private Context mContext;
     private Cursor mSongCursor;
-    private int actualPosition;
-    private boolean dataHasChangedWhilePlaying = false;
+
+    private boolean mIsBound;
+    private int mActualShowingSongPosition;
 
     @Inject
     public SongPresenter(Context context, DataManager dataManager, SongActivity view) {
@@ -41,56 +40,56 @@ public class SongPresenter implements SongContract.Presenter {
 
     @Override
     public void stopSong() {
-        mMusicService.stopPlaying();
+        mMusicService.stopSong();
         mView.setPlayButton();
-        mDataManager.removeSong(getSongId());
+        mDataManager.removeSong(getSongId(mMusicService.getActualPlayingSongPosition()));
     }
 
     @Override
     public void playPauseSong() {
-        if (mMusicService.isPlaying() && !dataHasChangedWhilePlaying) {
-            pauseSong();
-            mView.setPlayButton();
-        } else {
-            if (mMusicService.getCurrentPosition() != 0 && !dataHasChangedWhilePlaying)
-                unpauseSong();
-            else
+        boolean isViewCorrelatedToCurrentSong = mActualShowingSongPosition == mMusicService.getActualPlayingSongPosition();
+        if (isViewCorrelatedToCurrentSong) {
+            if(mMusicService.isPlaying()){
+                pauseSong();
+            }else if(mMusicService.isPaused()){
+                resumeSong();
+            }else{
                 playSong();
-            mView.setPauseButton();
+            }
+        }else{
+            playSong();
         }
     }
 
     private void pauseSong() {
-        mMusicService.pausePlaying();
-        mDataManager.updateSong(getSongId(), mMusicService.getCurrentPosition());
+        mMusicService.pauseSong();
+        mView.setPlayButton();
+        mDataManager.updateSong(getSongId(mMusicService.getActualPlayingSongPosition()),
+                mMusicService.getCurrentPlayingTime());
         mView.showToast(mContext.getString(R.string.pause_position_saved));
     }
 
     private void playSong() {
-        mSongCursor.moveToPosition(actualPosition);
-        String filePath = "file://" + getSongData();
-        Song currentSong;
-        if ((currentSong = mDataManager.getSong(getSongId())) != null) {
-            mMusicService.startPlayingFromPosition(filePath, currentSong.pauseTime);
-            mView.showToast(mContext.getString(R.string.track_resumed_from_saved));
-        } else {
-            mMusicService.startPlaying(filePath);
+        mMusicService.startPlayingSong(getSongData(mActualShowingSongPosition), mActualShowingSongPosition);
+        Song currentShowingSong = mDataManager.getSong(getSongId(mActualShowingSongPosition));
+        if(currentShowingSong != null){
+            mMusicService.seekTo(currentShowingSong.pauseTime);
         }
         mView.setPauseButton();
-        dataHasChangedWhilePlaying = false;
-
+        mView.showToast(mContext.getString(R.string.track_resumed_from_saved));
     }
 
-    private void unpauseSong() {
-        mMusicService.unPausePlaying();
-        mDataManager.removeSong(getSongId());
+    private void resumeSong() {
+        mMusicService.resumeSong();
+        mDataManager.removeSong(getSongId(mMusicService.getActualPlayingSongPosition()));
+        mView.setPauseButton();
     }
 
     @Override
     public void nextSong() {
-        if (mSongCursor.getCount() > actualPosition + 1) {
-            actualPosition++;
-            setupViewWithSongData(null);
+        if (mSongCursor.getCount() > mActualShowingSongPosition + 1) {
+            mActualShowingSongPosition++;
+            setupViewToNewSong();
             playSong();
         } else {
             mView.showToast(mContext.getString(R.string.last_song));
@@ -99,53 +98,55 @@ public class SongPresenter implements SongContract.Presenter {
 
     @Override
     public void prevSong() {
-        if (actualPosition > 0) {
-            actualPosition--;
-            setupViewWithSongData(null);
+        if (mActualShowingSongPosition > 0) {
+            mActualShowingSongPosition--;
+            setupViewToNewSong();
             playSong();
         } else {
             mView.showToast(mContext.getString(R.string.first_song));
         }
     }
 
-    @Override
-    public void setupViewWithSongData(Activity activity) {
-        mSongCursor.moveToPosition(actualPosition);
+    private void setupViewToNewSong() {
+        mSongCursor.moveToPosition(mActualShowingSongPosition);
         String newArtist = mSongCursor.getString(mSongCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
         String newTitle = mSongCursor.getString(mSongCursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
+        int duration = getDuration(mActualShowingSongPosition);
         mView.setArtist(newArtist);
         mView.setTitle(newTitle);
-        mView.setMaxDuration(getDuration() / 1000);
+        mView.setMaxDuration(duration / 1000);
+    }
 
-        if (activity != null) {
-            final Handler seekBarHandler = new Handler();
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (mMusicService != null) {
-                        if(mMusicService.isPlaying() && !dataHasChangedWhilePlaying){
-                            mView.updateProgress(mMusicService.getRealPosition() / 1000);
-                        }else{
-                            mView.updateProgress(0);
-                        }
+
+    private void setupSeekBarHandler(Activity activity){
+        final Handler seekBarHandler = new Handler();
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mMusicService != null) {
+                    boolean isViewCorrelatedToCurrentSong = mActualShowingSongPosition == mMusicService.getActualPlayingSongPosition();
+                    if(isViewCorrelatedToCurrentSong){
+                        mView.updateProgress(mMusicService.getCurrentPlayingTime() / 1000);
+                    }else{
+                        mView.updateProgress(0);
                     }
-                    seekBarHandler.postDelayed(this, 1000);
                 }
-            });
-        }
+                seekBarHandler.postDelayed(this, 1000);
+            }
+        });
     }
 
     @Override
-    public void prepareService(int position, Activity activity) {
+    public void prepareService(int newSongPosition, Activity activity) {
         if (mSongCursor == null)
             mSongCursor = mDataManager.getSongCursor();
         if (!mIsBound)
             doBindService();
-        if (position != actualPosition) {
-            Log.d(TAG, "position="+position + " actualPosition="+actualPosition );
-            actualPosition = position;
-            dataHasChangedWhilePlaying = true;
-        }
+
+        mActualShowingSongPosition = newSongPosition;
+        setupViewToNewSong();
+        setupSeekBarHandler(activity);
+
         final Handler handler = new Handler();
         handler.postDelayed(() -> registerForCallbacks(activity), 200);
     }
@@ -166,15 +167,18 @@ public class SongPresenter implements SongContract.Presenter {
         }
     }
 
-    private String getSongId() {
+    private String getSongId(int position) {
+        mSongCursor.moveToPosition(position);
         return mSongCursor.getString(mSongCursor.getColumnIndex(MediaStore.Audio.Media._ID));
     }
 
-    private String getSongData() {
-        return mSongCursor.getString(mSongCursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+    private String getSongData(int position) {
+        mSongCursor.moveToPosition(position);
+        return "file://" +  mSongCursor.getString(mSongCursor.getColumnIndex(MediaStore.Audio.Media.DATA));
     }
 
-    private int getDuration() {
+    private int getDuration(int position) {
+        mSongCursor.moveToPosition(position);
         return Integer.valueOf(mSongCursor.getString(mSongCursor.getColumnIndex(MediaStore.Audio.Media.DURATION)));
     }
 
