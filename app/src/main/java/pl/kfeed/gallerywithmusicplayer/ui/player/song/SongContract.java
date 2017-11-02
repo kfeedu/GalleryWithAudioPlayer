@@ -7,7 +7,7 @@ import pl.kfeed.gallerywithmusicplayer.ui.base.BaseView;
  * Created by Kfeed on 01.11.2017.
  */
 
-public class SongContract {
+public interface SongContract {
     interface Presenter extends BasePresenter<View> {
 
     }

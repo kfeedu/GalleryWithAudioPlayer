@@ -15,16 +15,13 @@ public interface GalleryContract {
 
         Cursor getThumbnailsAndImageCursor();
 
-        Bitmap getFullImageBitmap(int position);
+        void refreshData();
 
-        String getPathToImageOnPosition(int position);
-
-        Calendar getDateFromImageOnPosition(int position);
     }
 
     interface View extends BaseView<Presenter> {
 
-        void showError(String err);
+        void updateAdapter(Cursor imageAndThumbCursor);
 
         void showToast(String message);
     }

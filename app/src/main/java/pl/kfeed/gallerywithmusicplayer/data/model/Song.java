@@ -5,13 +5,13 @@ import com.orm.SugarRecord;
 public class Song extends SugarRecord<Song> {
 
     int songId;
-    long timeOfPause;
+    long pauseTime;
 
     public Song() {}
 
-    public Song(int songId, long timeOfPause) {
+    public Song(int songId, long pauseTime) {
         this.songId = songId;
-        this.timeOfPause = timeOfPause;
+        this.pauseTime = pauseTime;
     }
 
     public int getSongId() {
@@ -23,10 +23,10 @@ public class Song extends SugarRecord<Song> {
     }
 
     public long getTimeOfPause() {
-        return timeOfPause;
+        return pauseTime;
     }
 
     public void setTimeOfPause(long timeOfPause) {
-        this.timeOfPause = timeOfPause;
+        this.pauseTime = timeOfPause;
     }
 }

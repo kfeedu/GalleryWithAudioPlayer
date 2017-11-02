@@ -59,7 +59,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
     }
 
     public void updateCursor(Cursor newImageThumbCursor) {
-        mThumbImageCursor.close();
         mThumbImageCursor = newImageThumbCursor;
         notifyDataSetChanged();
     }

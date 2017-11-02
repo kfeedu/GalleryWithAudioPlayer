@@ -18,39 +18,28 @@ public class DbHelper {
     @Inject
     public DbHelper(Context context){}
 
-    public void saveSongToDb(int songId, long pauseTime){
+    public Song getSong(int songId){
+        List<Song> songs = Song.find(Song.class,"songId = ?", String.valueOf(songId));
+        if(songs.isEmpty()){
+            return null;
+        }else{
+            return songs.get(0);
+        }
+    }
+
+    public void updateSong(int songId, long pauseTime){
+        List<Song> songs = Song.find(Song.class, "songId = ?", String.valueOf(songId));
+        if(songs.isEmpty()){
+            addSongToDb(songId, pauseTime);
+        }else{
+            songs.get(0).setTimeOfPause(pauseTime);
+            songs.get(0).save();
+        }
+    }
+
+    private void addSongToDb(int songId, long pauseTime){
         Song song = new Song(songId, pauseTime);
         song.save();
     }
 
-    public long getSongPauseTime(int songId){
-        List<Song> songs = Song.listAll(Song.class);
-        for(Song song: songs){
-            if(song.getSongId() == songId){
-                return song.getTimeOfPause();
-            }
-        }
-        return -1;
-    }
-
-    public void updateSong(int songId, long pauseTime){
-        long dbId = getDbId(songId);
-        if(dbId == -1){
-            saveSongToDb(songId, pauseTime);
-        }else{
-            Song song = Song.findById(Song.class, dbId);
-            song.setTimeOfPause(pauseTime);
-            song.save();
-        }
-    }
-
-    public long getDbId(int songId){
-        List<Song> songs = Song.listAll(Song.class);
-        for(Song song: songs){
-            if(song.getSongId() == songId){
-                return song.getId();
-            }
-        }
-        return -1;
-    }
 }

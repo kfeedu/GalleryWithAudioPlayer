@@ -43,7 +43,7 @@ public class GalleryFragment extends DaggerFragment implements GalleryContract.V
 
     @Inject
     GalleryPresenter mPresenter;
-    GalleryAdapter mGalleryAdapter;
+    private GalleryAdapter mGalleryAdapter;
 
     private Cursor mImageThumbCursor;
     private PhotoPopup mPopup;
@@ -78,7 +78,7 @@ public class GalleryFragment extends DaggerFragment implements GalleryContract.V
 
     @Override
     public void onRefresh() {
-        mGalleryAdapter.updateCursor(mPresenter.getThumbnailsAndImageCursor());
+        mPresenter.refreshData();
         mSwipeRefreshLayout.setRefreshing(false);
         showToast(getString(R.string.refreshed));
     }
@@ -101,22 +101,26 @@ public class GalleryFragment extends DaggerFragment implements GalleryContract.V
 
     //Mvp methods
     @Override
-    public void showError(String err) {
-        Toast.makeText(getActivity(), err, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void showToast(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
+    public void updateAdapter(Cursor imageAndThumbCursor) {
+        mImageThumbCursor.close();
+        mImageThumbCursor = imageAndThumbCursor;
+        mGalleryAdapter.updateCursor(mImageThumbCursor);
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mPresenter.attachView(this);
     }
 
     @Override
     public void onDetach() {
+        mPresenter.detachView();
         super.onDetach();
     }
 }

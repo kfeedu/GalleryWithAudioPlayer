@@ -1,28 +1,39 @@
 package pl.kfeed.gallerywithmusicplayer.ui.player;
 
+import android.database.Cursor;
 import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
-/**
- * Created by Kfeed on 19.10.2017.
- */
+import pl.kfeed.gallerywithmusicplayer.data.DataManager;
 
 public final class PlayerPresenter implements PlayerContract.Presenter {
 
-    @Nullable
-    private PlayerContract.View mPlayerView;
+    private PlayerContract.View mView;
+    private DataManager mDataManager;
 
     @Inject
-    PlayerPresenter(){}
+    PlayerPresenter(DataManager dataManager){
+        mDataManager = dataManager;
+    }
+
+    @Override
+    public void refreshData() {
+        mView.updateAdapter(getSongCursor());
+    }
 
     @Override
     public void attachView(PlayerContract.View view) {
-
+        mView = view;
     }
 
     @Override
     public void detachView() {
+        mView = null;
+    }
 
+    @Override
+    public Cursor getSongCursor() {
+        return mDataManager.getSongCursor();
     }
 }

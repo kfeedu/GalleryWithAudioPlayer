@@ -12,19 +12,23 @@ import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import pl.kfeed.gallerywithmusicplayer.data.local.DbHelper;
 import pl.kfeed.gallerywithmusicplayer.data.local.StorageHelper;
 import pl.kfeed.gallerywithmusicplayer.data.local.filter.FilterHelper;
+import pl.kfeed.gallerywithmusicplayer.data.model.Song;
 
 @Singleton
 public class DataManager {
 
     private final StorageHelper mStorageHelper;
     private final FilterHelper mFilterHelper;
+    private final DbHelper mDbHelper;
 
     @Inject
-    DataManager(StorageHelper storageHelper, FilterHelper filterHelper) {
+    DataManager(StorageHelper storageHelper, FilterHelper filterHelper, DbHelper dbHelper) {
         mFilterHelper = filterHelper;
         mStorageHelper = storageHelper;
+        mDbHelper = dbHelper;
     }
 
     public Cursor getPhotoAndThumbCursor() {
@@ -53,5 +57,17 @@ public class DataManager {
 
     public boolean saveImageToAppDir(Bitmap image, String fileName) {
         return mStorageHelper.saveImageToInternalStorage(image, fileName + ".jpg");
+    }
+
+    public Cursor getSongCursor(){
+        return mStorageHelper.getSongCursor();
+    }
+
+    public Song getSong(int songId){
+        return mDbHelper.getSong(songId);
+    }
+
+    public void updateSong(int songId, long pauseTime){
+        mDbHelper.updateSong(songId, pauseTime);
     }
 }

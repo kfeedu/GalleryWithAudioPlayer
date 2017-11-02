@@ -17,8 +17,7 @@ public final class GalleryPresenter implements GalleryContract.Presenter {
     private static final String TAG = GalleryPresenter.class.getSimpleName();
 
     private GalleryContract.View mView;
-    private Cursor mImageThumbCursor;
-    private final DataManager mDataManager;
+    private DataManager mDataManager;
 
     @Inject
     GalleryPresenter(DataManager dataManager) {
@@ -37,32 +36,11 @@ public final class GalleryPresenter implements GalleryContract.Presenter {
 
     @Override
     public Cursor getThumbnailsAndImageCursor() {
-        mImageThumbCursor = mDataManager.getPhotoAndThumbCursor();
-        return mImageThumbCursor;
+        return mDataManager.getPhotoAndThumbCursor();
     }
 
     @Override
-    public Bitmap getFullImageBitmap(int position) {
-        mImageThumbCursor.moveToPosition(position);
-        Log.d(TAG, "Full image bitmap is about to be send further");
-        return mDataManager.getPhotoFromPath(mImageThumbCursor.getString(Constants.CURSOR_IMAGE_PATH));
-    }
-
-    @Override
-    public String getPathToImageOnPosition(int position) {
-        mImageThumbCursor.moveToPosition(position);
-        String photoPath = mImageThumbCursor.getString(Constants.CURSOR_IMAGE_PATH);
-        Log.d(TAG, "Sending image path from position=" + position + " imgPath=" + photoPath);
-        return photoPath;
-    }
-
-    @Override
-    public Calendar getDateFromImageOnPosition(int position) {
-        mImageThumbCursor.moveToPosition(position);
-        Long date = mImageThumbCursor.getLong(Constants.CURSOR_IMAGE_DATE);
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTimeInMillis(date * 1000);
-        Log.d(TAG, "Date of photo on position " + position + " date=" + date);
-        return calendar;
+    public void refreshData() {
+        mView.updateAdapter(getThumbnailsAndImageCursor());
     }
 }

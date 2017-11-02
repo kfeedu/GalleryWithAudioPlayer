@@ -32,11 +32,6 @@ public class StorageHelper {
 
     private static final String TAG = StorageHelper.class.getSimpleName();
 
-    private static final Uri IMAGE_INTERNAL_STORAGE_URI = MediaStore.Images.Media.INTERNAL_CONTENT_URI;
-    private static final Uri IMAGE_EXTERNAL_STORAGE_URI = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-    private static final Uri THUMB_INTERNAL_STORAGE_URI = MediaStore.Images.Thumbnails.INTERNAL_CONTENT_URI;
-    private static final Uri THUMB_EXTERNAL_STORAGE_URI = MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI;
-
     private Context mContext;
 
     @Inject
@@ -117,6 +112,13 @@ public class StorageHelper {
                 "(" + MediaStore.Images.Media._ID + "*(-1))");
     }
 
+    public Cursor getSongCursor(){
+        return mContext.getContentResolver().query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                null, null, null,
+                MediaStore.Audio.Media.DATE_ADDED);
+    }
+
     public Cursor joinImageAndThumbCursors(Cursor imageCursor, Cursor thumbCursor) {
         // join these and return
         // the join is on images._ID = thumbnails.IMAGE_ID
@@ -188,4 +190,6 @@ public class StorageHelper {
         imageCursor.close();
         return retCursor;
     }
+
+
 }
