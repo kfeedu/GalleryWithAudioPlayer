@@ -1,7 +1,6 @@
 package pl.kfeed.gallerywithmusicplayer.ui.player;
 
 import android.database.Cursor;
-import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
@@ -13,7 +12,7 @@ public final class PlayerPresenter implements PlayerContract.Presenter {
     private DataManager mDataManager;
 
     @Inject
-    PlayerPresenter(DataManager dataManager){
+    PlayerPresenter(DataManager dataManager) {
         mDataManager = dataManager;
     }
 

@@ -42,7 +42,8 @@ public class PlayerFragment extends DaggerFragment implements PlayerContract.Vie
     private PlayerAdapter mPlayerAdapter;
 
     @Inject
-    public PlayerFragment(){}
+    public PlayerFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +61,7 @@ public class PlayerFragment extends DaggerFragment implements PlayerContract.Vie
         return view;
     }
 
-    private void setupRecyclerView(){
+    private void setupRecyclerView() {
         mPlayerAdapter = new PlayerAdapter(getActivity(), mPresenter.getSongCursor(), this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mPlayerAdapter);

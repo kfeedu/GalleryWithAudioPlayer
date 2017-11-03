@@ -62,5 +62,3 @@ public class MainActivity extends DaggerAppCompatActivity {
         mViewPager.setAdapter(viewPagerAdapter);
     }
 }
-
-

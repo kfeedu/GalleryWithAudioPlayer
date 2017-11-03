@@ -1,6 +1,5 @@
 package pl.kfeed.gallerywithmusicplayer.util;
 
-
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -10,7 +9,6 @@ public class ColumnsSpacingUtil {
     private DisplayMetrics displayMetrics;
 
     public ColumnsSpacingUtil(Context context, int viewId) {
-
         View view = View.inflate(context, viewId, null);
         view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         width = view.getMeasuredWidth();
@@ -19,10 +17,8 @@ public class ColumnsSpacingUtil {
     }
 
     public int calculateNoOfColumns() {
-
         int numberOfColumns = displayMetrics.widthPixels / width;
         remaining = displayMetrics.widthPixels - (numberOfColumns * width);
-//        System.out.println("\nRemaining\t" + remaining + "\nNumber Of Columns\t" + numberOfColumns);
         if (remaining / (2 * numberOfColumns) < 15) {
             numberOfColumns--;
             remaining = displayMetrics.widthPixels - (numberOfColumns * width);
@@ -31,10 +27,7 @@ public class ColumnsSpacingUtil {
     }
 
     public int calculateSpacing() {
-
         int numberOfColumns = calculateNoOfColumns();
-//        System.out.println("\nNumber Of Columns\t"+ numberOfColumns+"\nRemaining Space\t"+remaining+"\nSpacing\t"+remaining/(2*numberOfColumns)+"\nWidth\t"+width+"\nHeight\t"+height+"\nDisplay DPI\t"+displayMetrics.densityDpi+"\nDisplay Metrics Width\t"+displayMetrics.widthPixels);
         return remaining / (2 * numberOfColumns);
     }
-
 }

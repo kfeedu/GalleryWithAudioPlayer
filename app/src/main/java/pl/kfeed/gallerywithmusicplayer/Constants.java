@@ -1,7 +1,5 @@
 package pl.kfeed.gallerywithmusicplayer;
 
-import android.provider.MediaStore;
-
 public class Constants {
 
     //Column ID's in Thumb/Image Cursor

@@ -10,7 +10,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -69,7 +68,6 @@ public class MusicPlayerService extends DaggerService {
     @Override
     public void onDestroy() {
         mNotificationManager.cancel(NOTIFICATION);
-        Toast.makeText(this, R.string.service_stopped, Toast.LENGTH_SHORT).show();
         super.onDestroy();
     }
 

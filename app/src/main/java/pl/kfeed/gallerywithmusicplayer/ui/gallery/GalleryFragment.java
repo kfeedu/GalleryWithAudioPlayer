@@ -1,11 +1,9 @@
 package pl.kfeed.gallerywithmusicplayer.ui.gallery;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,18 +13,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-import java.util.Calendar;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerFragment;
-import pl.kfeed.gallerywithmusicplayer.Constants;
 import pl.kfeed.gallerywithmusicplayer.R;
 import pl.kfeed.gallerywithmusicplayer.injection.ActivityScoped;
 import pl.kfeed.gallerywithmusicplayer.ui.gallery.adapter.GalleryAdapter;
@@ -132,18 +125,4 @@ public class GalleryFragment extends DaggerFragment implements GalleryContract.V
         mPresenter.detachView();
         super.onDetach();
     }
-
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        if (mPopup != null)
-//            outState.putInt(Constants.POPUP_SAVE_STATE_POSITION_KEY, mPopup.getViewPosition());
-//        super.onSaveInstanceState(outState);
-//    }
-//
-//    @Override
-//    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-//        if (savedInstanceState != null)
-//            showPhotoPopup(savedInstanceState.getInt(Constants.POPUP_SAVE_STATE_POSITION_KEY));
-//        super.onViewStateRestored(savedInstanceState);
-//    }
 }

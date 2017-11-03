@@ -1,8 +1,6 @@
 package pl.kfeed.gallerywithmusicplayer;
 
-import com.orm.SchemaGenerator;
 import com.orm.SugarContext;
-import com.orm.SugarDb;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;

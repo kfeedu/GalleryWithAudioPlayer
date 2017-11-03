@@ -66,10 +66,11 @@
             android:visibility="invisible" />
     </FrameLayout>
 
-    <View android:background="@color/primary_text"
-        android:layout_width = "match_parent"
+    <View
+        android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_above="@id/filterBtnSection"/>
+        android:layout_above="@id/filterBtnSection"
+        android:background="@color/primary_text" />
 
     <LinearLayout
         android:id="@+id/filterBtnSection"
@@ -78,9 +79,9 @@
         android:layout_alignParentBottom="true"
         android:background="@color/md_grey_200"
         android:gravity="center_horizontal"
+        android:orientation="horizontal"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:orientation="horizontal">
+        android:paddingTop="10dp">
 
         <FrameLayout
             android:layout_width="100dp"

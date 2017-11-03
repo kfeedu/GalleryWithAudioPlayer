@@ -53,8 +53,8 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
         notifyDataSetChanged();
     }
 
-    public void closeCursor(){
-        if(!mSongCursor.isClosed())
+    public void closeCursor() {
+        if (!mSongCursor.isClosed())
             mSongCursor.close();
     }
 

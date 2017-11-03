@@ -1,15 +1,9 @@
 package pl.kfeed.gallerywithmusicplayer.ui.gallery;
 
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.util.Log;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import javax.inject.Inject;
 
-import pl.kfeed.gallerywithmusicplayer.Constants;
 import pl.kfeed.gallerywithmusicplayer.data.DataManager;
 
 public final class GalleryPresenter implements GalleryContract.Presenter {

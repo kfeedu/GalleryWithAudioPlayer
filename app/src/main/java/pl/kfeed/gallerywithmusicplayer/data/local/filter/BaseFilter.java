@@ -1,11 +1,6 @@
 package pl.kfeed.gallerywithmusicplayer.data.local.filter;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-
-/**
- * Created by Kfeed on 27.10.2017.
- */
 
 public class BaseFilter {
 

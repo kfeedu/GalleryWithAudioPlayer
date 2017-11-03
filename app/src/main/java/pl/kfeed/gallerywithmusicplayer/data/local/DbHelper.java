@@ -1,9 +1,5 @@
 package pl.kfeed.gallerywithmusicplayer.data.local;
 
-import android.content.Context;
-
-import com.orm.SugarRecord;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,12 +7,12 @@ import javax.inject.Singleton;
 
 import pl.kfeed.gallerywithmusicplayer.data.model.Song;
 
-
 @Singleton
 public class DbHelper {
 
     @Inject
-    public DbHelper() {}
+    public DbHelper() {
+    }
 
     public Song getSong(String songId) {
         List<Song> songs = Song.find(Song.class, "song_id = ?", songId);

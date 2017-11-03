@@ -5,10 +5,6 @@ import android.app.Activity;
 import pl.kfeed.gallerywithmusicplayer.ui.base.BasePresenter;
 import pl.kfeed.gallerywithmusicplayer.ui.base.BaseView;
 
-/**
- * Created by Kfeed on 01.11.2017.
- */
-
 public interface SongContract {
 
     interface Presenter extends BasePresenter<View> {

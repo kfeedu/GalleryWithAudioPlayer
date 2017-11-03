@@ -3,8 +3,6 @@ package pl.kfeed.gallerywithmusicplayer.injection;
 import dagger.Binds;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
-import pl.kfeed.gallerywithmusicplayer.injection.ActivityScoped;
-import pl.kfeed.gallerywithmusicplayer.injection.FragmentScoped;
 import pl.kfeed.gallerywithmusicplayer.ui.gallery.GalleryContract;
 import pl.kfeed.gallerywithmusicplayer.ui.gallery.GalleryFragment;
 import pl.kfeed.gallerywithmusicplayer.ui.gallery.GalleryPresenter;

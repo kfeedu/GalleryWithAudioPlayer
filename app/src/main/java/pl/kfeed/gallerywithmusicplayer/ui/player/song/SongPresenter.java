@@ -49,14 +49,14 @@ public class SongPresenter implements SongContract.Presenter {
     public void playPauseSong() {
         boolean isViewCorrelatedToCurrentSong = mActualShowingSongPosition == mMusicService.getActualPlayingSongPosition();
         if (isViewCorrelatedToCurrentSong) {
-            if(mMusicService.isPlaying()){
+            if (mMusicService.isPlaying()) {
                 pauseSong();
-            }else if(mMusicService.isPaused()){
+            } else if (mMusicService.isPaused()) {
                 resumeSong();
-            }else{
+            } else {
                 playSong();
             }
-        }else{
+        } else {
             playSong();
         }
     }
@@ -72,7 +72,7 @@ public class SongPresenter implements SongContract.Presenter {
     private void playSong() {
         mMusicService.startPlayingSong(getSongData(mActualShowingSongPosition), mActualShowingSongPosition);
         Song currentShowingSong = mDataManager.getSong(getSongId(mActualShowingSongPosition));
-        if(currentShowingSong != null){
+        if (currentShowingSong != null) {
             mMusicService.seekTo(currentShowingSong.pauseTime);
         }
         mView.setPauseButton();
@@ -118,16 +118,16 @@ public class SongPresenter implements SongContract.Presenter {
     }
 
 
-    private void setupSeekBarHandler(Activity activity){
+    private void setupSeekBarHandler(Activity activity) {
         final Handler seekBarHandler = new Handler();
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (mMusicService != null) {
                     boolean isViewCorrelatedToCurrentSong = mActualShowingSongPosition == mMusicService.getActualPlayingSongPosition();
-                    if(isViewCorrelatedToCurrentSong){
+                    if (isViewCorrelatedToCurrentSong) {
                         mView.updateProgress(mMusicService.getCurrentPlayingTime() / 1000);
-                    }else{
+                    } else {
                         mView.updateProgress(0);
                     }
                 }
@@ -174,7 +174,7 @@ public class SongPresenter implements SongContract.Presenter {
 
     private String getSongData(int position) {
         mSongCursor.moveToPosition(position);
-        return "file://" +  mSongCursor.getString(mSongCursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+        return "file://" + mSongCursor.getString(mSongCursor.getColumnIndex(MediaStore.Audio.Media.DATA));
     }
 
     private int getDuration(int position) {

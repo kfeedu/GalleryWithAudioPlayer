@@ -9,7 +9,8 @@ public class Song extends SugarRecord {
     public String songId;
     public int pauseTime;
 
-    public Song() {}
+    public Song() {
+    }
 
     public Song(String songId, int pauseTime) {
         this.songId = songId;

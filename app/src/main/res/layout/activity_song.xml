@@ -53,31 +53,32 @@
                     android:id="@+id/songActualTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif"
-                    android:text="00:00"
-                    android:maxLines="1"
                     android:layout_weight="0"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="1"
+                    android:paddingLeft="8dp"
+                    android:text="00:00"
                     android:textColor="@color/primary_text"
-                    android:textSize="14sp"
-                    android:paddingLeft="8dp"/>
+                    android:textSize="14sp" />
 
                 <SeekBar
                     android:id="@+id/songSeekBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="100"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:max="100" />
+
                 <TextView
                     android:id="@+id/songMaxTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif"
-                    android:textSize="14sp"
                     android:layout_weight="0"
+                    android:fontFamily="sans-serif"
                     android:maxLines="1"
                     android:paddingEnd="8dp"
+                    android:text="4:20"
                     android:textColor="@color/primary_text"
-                    android:text="4:20"/>
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <TextView
@@ -115,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:src="@drawable/ic_stop_black_48px"/>
+                    android:src="@drawable/ic_stop_black_48px" />
 
                 <ImageButton
                     android:id="@+id/songPlayPauseBtn"

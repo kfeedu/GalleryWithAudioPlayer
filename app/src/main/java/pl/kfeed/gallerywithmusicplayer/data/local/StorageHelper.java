@@ -1,19 +1,15 @@
 package pl.kfeed.gallerywithmusicplayer.data.local;
 
 import android.content.Context;
-import android.content.ContextWrapper;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.CursorJoiner;
 import android.database.MatrixCursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,7 +21,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import pl.kfeed.gallerywithmusicplayer.Constants;
-import pl.kfeed.gallerywithmusicplayer.R;
 
 @Singleton
 public class StorageHelper {
@@ -112,7 +107,7 @@ public class StorageHelper {
                 "(" + MediaStore.Images.Media._ID + "*(-1))");
     }
 
-    public Cursor getSongCursor(){
+    public Cursor getSongCursor() {
         return mContext.getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 null, null, null,
@@ -190,6 +185,4 @@ public class StorageHelper {
         imageCursor.close();
         return retCursor;
     }
-
-
 }

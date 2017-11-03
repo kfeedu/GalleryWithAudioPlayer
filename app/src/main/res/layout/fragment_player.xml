@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="pl.kfeed.gallerywithmusicplayer.ui.player.PlayerFragment">
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/playerSwipeRefresh"
         android:layout_width="match_parent"

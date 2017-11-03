@@ -109,6 +109,6 @@ public class PhotoFilterActivity extends DaggerAppCompatActivity implements Phot
 
     @OnClick(R.id.filterSaveBtn)
     void onSaveClick() {
-        mPresenter.savePhoto(((BitmapDrawable)mImage.getDrawable()).getBitmap());
+        mPresenter.savePhoto(((BitmapDrawable) mImage.getDrawable()).getBitmap());
     }
 }

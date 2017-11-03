@@ -4,16 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import java.util.concurrent.Callable;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Single;
-
-/**
- * Created by Kfeed on 27.10.2017.
- */
 
 @Singleton
 public class FilterHelper {
