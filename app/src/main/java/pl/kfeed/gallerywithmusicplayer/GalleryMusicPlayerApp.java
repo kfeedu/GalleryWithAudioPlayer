@@ -15,6 +15,7 @@ public class GalleryMusicPlayerApp extends DaggerApplication {
     public void onCreate() {
         super.onCreate();
         SugarContext.init(this);
+        //little hack to force SugarORM to make a SONG Table
         Song.findById(Song.class, (long) 1);
     }
 
